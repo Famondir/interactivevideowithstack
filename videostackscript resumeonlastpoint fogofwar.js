@@ -193,7 +193,7 @@ if (!document.getElementById(cssId))
 <div id="videos">
     <video id="video1" class="video-js vjs-default-skin" controls="" width="640" data-setup='{ "playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "width": 640 }'>
     <source src="https://mediathek.htw-berlin.de/getMedium/Default/531c43cd4e70b7ead9d6b01118ae26a7.mp4" type="video/mp4">
-	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/853464344/dummyvideo.vtt" srclang="en"  label="English" default>
+	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/685531234/dummyvideo.vtt" srclang="en"  label="English" default>
 	</video>
 </div>
 
