@@ -1,32 +1,14 @@
-<script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<!-- question: 7466409  -->
+  <question type="stack">
+    <name>
+      <text>Interactive video dummy</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<script src="https://www.rub.de/ak-mathe-digital/stackselbstlern.js"></script>
 
 <script type="text/javascript">
-var cssId = 'myCss';  // you could encode the css path itself to generate id..
-if (!document.getElementById(cssId))
-{
-    var head  = document.getElementsByTagName('head')[0];
-    var link  = document.createElement('link');
-    link.id   = cssId;
-    link.rel  = 'stylesheet';
-    link.type = 'text/css';
-    link.href = 'https://vjs.zencdn.net/7.18.0/video-js.css';
-    link.media = 'all';
-    head.appendChild(link);
-}
-</script>
-
-<script type="text/javascript">
-	// Quelle: verändert nach https://www.rub.de/ak-mathe-digital/stackselbstlern.js
-	function show(s) {
-		document.getElementById(s).style.display = 'block';
-		/*document.getElementById(s).scrollIntoView();
-		document.getElementById(s).focus(); 
-		var displaycache = JSON.parse(sessionStorage.getItem("displaycache" + aufgabennummer));
-		displaycache[s] = "block";
-		sessionStorage.setItem("displaycache" + aufgabennummer, JSON.stringify(displaycache));
-		*/
-	  }
-
 	function getState () {
 		if (anzahl < list.length-1) {
 			console.log("#-----# Aktueller Aufgabenstatus #-----#");
@@ -88,8 +70,7 @@ if (!document.getElementById(cssId))
 
 			// Loop over each cue point, dynamically create a div for each
 			// then place in div progress bar
-			for (i = 0; i <= anzahl && i < list.length-1; i++) {
-				
+			for (i = 0; i < list.length-1; i++) {
 				var elem = document.createElement("div");
 				elem.className = "vjs-marker";
 				elem.id = "cp" + i;
@@ -103,28 +84,11 @@ if (!document.getElementById(cssId))
 				elem.appendChild(elemSpan);
 				
 				elem.onclick = function () {
-					if (this.dataset.time <= maxtime) {
-						console.log("Sprung erfolgreich.");
-						video.currentTime = this.dataset.time;
-						stateQuestion();
-					} else {
-						console.log("Hier darfst du noch nicht hin springen.");
-					}
+					video.currentTime = this.dataset.time;
 				};
 				
 				playheadWell.appendChild(elem);
 			}
-			
-			// Add blocker
-				var elem = document.createElement("div");
-				elem.className = "vjs-marker vjs-blocker";
-				var elemSpan = document.createElement("span");
-				elemSpan.textContent = "Hierhin können Sie noch nicht springen.";
-				elem.appendChild(elemSpan);
-				elem.style.left = list[anzahl][1]/videoDuration*100 + "%";
-				elem.style.width = (100-list[anzahl][1]/videoDuration*100) + "%"
-				
-				playheadWell.appendChild(elem);
 		});
 			
 	}
@@ -149,12 +113,6 @@ if (!document.getElementById(cssId))
 				});
 			});
 		}
-		
-		function uebertrage(){
-			document.querySelector('#zahl').querySelector('input').value=video.currentTime;
-			
-			// document.querySelector('input[type="submit"]').click();
-		};
 </script>
 
 <script type="text/javascript">
@@ -185,7 +143,7 @@ if (!document.getElementById(cssId))
 <div id="videos">
     <video id="video1" class="video-js vjs-default-skin" controls="" width="640" data-setup='{ "playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "width": 640 }'>
     <source src="https://mediathek.htw-berlin.de/getMedium/Default/531c43cd4e70b7ead9d6b01118ae26a7.mp4" type="video/mp4">
-	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/993999625/dummyvideo.vtt" srclang="en"  label="English" default>
+	<track kind="chapters" src="@@PLUGINFILE@@/dummyvideo.vtt" srclang="en"  label="English" default>
 	</video>
 </div>
 
@@ -204,16 +162,11 @@ if (!document.getElementById(cssId))
 
 /* Anzeige aktueller Aufgabe */
 <div id="targetcard" class="card">
-	<div class="card-header" id="headAktuelleAufgabe">
-		<h4 class="card-title">aktuelle Aufgabe</h4>
-	</div>
+
 </div>
 
 /* Aufgabensammlung */
-<div id="aufgabensammlung" class="card bg-light" style="display: none;">
-	<div class="card-header">
-		<h4 class="card-title">Richtig beantwortete Aufgaben</h4>
-	</div>
+<div id="aufgabensammlung" class="card">
     <div class="card-body" id="a1" style="display: none;">
         <h5 class="card-title">Aufgabe 1</h5>
         <p class="card-text">Was ergibt \({@v1@}+{@v2@}\)?</p>
@@ -235,6 +188,8 @@ if (!document.getElementById(cssId))
 </div>
 
 <script type="text/javascript">
+
+
     var video = document.getElementsByTagName("video")[0];
     var maxtime = 0;
 	var list = null;
@@ -261,9 +216,7 @@ if (!document.getElementById(cssId))
 
 		// Aufgabenstatus updaten
 		prtList = document.getElementsByClassName("stackprtfeedback");
-		var prtArray = Array.prototype.slice.call(prtList).filter(function (el) {return !el.classList.contains("stackprtfeedback-prtZ")});
-		anzahl = prtArray.length;
-		
+		anzahl = prtList.length;
 		list = {#list#};
 		// console.log(list);
 		list.push(["none",video.duration]);
@@ -271,8 +224,8 @@ if (!document.getElementById(cssId))
 		
 		anzahlRichtig = 0;
 		for (let i = 0; i < anzahl; i++) {
-			//  console.log(prtArray[i].children[0].className=="correct");
-			if (prtArray[i].children[0].className=="correct") {
+			//  console.log(prtList[i].children[0].className=="correct");
+			if (prtList[i].children[0].className=="correct") {
 				anzahlRichtig+=1;
 			}
 			
@@ -288,14 +241,9 @@ if (!document.getElementById(cssId))
 		
 		// Neueste Aufgabe verschieben
         var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
-        if (anzahlRichtig < list.length-1) {
-			document.getElementById("headAktuelleAufgabe").insertAdjacentElement('afterend', currentQuestion);
-		}
-		
-		// Aufgabensammlung anzeigen, wenn nötig
-		if (anzahlRichtig > 0) {
-			document.getElementById("aufgabensammlung").style.display = "block";
-		}
+        if (anzahl < list.length-1) {
+			parent.insertAdjacentElement('afterbegin', currentQuestion);
+		}		
     });
 		
 
@@ -320,10 +268,9 @@ if (!document.getElementById(cssId))
 				timeTracking.currentTime = video.currentTime;
 				lastUpdated = 'currentTime';
 			}
-			
-			stateQuestion();
 		}
 		
+		stateQuestion();
 	});
 	
 	// prevent user from seeking
@@ -336,7 +283,7 @@ if (!document.getElementById(cssId))
 			video.pause();
 			console.log("Pause");
 			//play back from where the user started seeking after rewind or without rewind
-			video.currentTime = (timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime); // soll Endlosschleife vorbeugen
+			video.currentTime = timeTracking[lastUpdated];
 			video.play();
 		}
 	});
@@ -344,45 +291,224 @@ if (!document.getElementById(cssId))
 	video.onloadedmetadata = function() {
 		list[list.length-1] = (["none",video.duration]);
 		maxtime = list[anzahlRichtig][1];
-		
-		// setzt Videozeit auf letzten Videostand
-		if (document.querySelector('#zaehler')) {
-			var currTime = (document.querySelector('#zaehler').innerHTML > maxtime ? maxtime : document.querySelector('#zaehler').innerHTML);
-			console.log("Setze Video for bei: ", currTime);
-		} else {
-			var currTime = 0;
-		}
-		
+		// setzt Videozeit auf letzte Marke
 		if (anzahlRichtig > 0) {
-			//var currTime = list[anzahlRichtig-1][1];
+			var currTime = list[anzahlRichtig-1][1];
 			
 			timeTracking["watchedTime"] = currTime;
 			timeTracking["currentTime"] = currTime;
 			video.currentTime = currTime;
 		}
+		// Idee: setze Video auf Zeit vor reload (falls man nach dem die Frage gestellt wurde noch gescrollt hat; wenn man denn scrollen darf)
 		
-		addMarkers(); // manchmal wurden die Marker nicht richtig eingefügt. Eiun spezieller Observer hat geholfen
-		
+		addMarkers(); // manchmal werden die Marker nicht richtig eingefügt. Eiun spezieller Observer hat auch nciht geholfen
 		video.play(); // spiele nach erstem Check automatisch weiter
-
-		
 	};
 
 	window.onload = (event) => {
 		// console.log('page is fully loaded');
 		// document.getElementsByClassName("vjs-big-play-button")[0].style.display = "none";
 		// document.getElementsByClassName("vjs-control-bar")[0].style.display = "flex";
-		
-		/*
-		if (document.querySelector('#zaehler')) {
-			document.querySelector('#zaehlershow').innerHTML=document.querySelector('#zaehler').innerHTML;
-		};
-		*/
-		
-		document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
 	};
-</script>
+</script>]]></text>
+<file name="dummyvideo (1).vtt" path="/" encoding="base64">V0VCVlRUDQoNCkNIQVBURVIgMQ0KMDA6MDA6MTAuMDAwIC0tPiAwMDowMDozMC4wMDANCkludHJvDQogDQoNCkNIQVBURVIgMg0KMDA6MDA6MzAuMDAwIC0tPiAwMDowMDo1Ny4wMDANClBob3RvLCBQaG9uZWJvb2ssIFBoZWFzYW50DQogDQoNCkNIQVBURVIgMw0KMDA6MDA6NTcuMDAwIC0tPiAwMDowMTowNS4wMDANCkRydW0gU29sbw0KIA0KDQpDSEFQVEVSIDQNCjAwOjAxOjA1LjAwMCAtLT4gMDA6MDE6MTYuMDAwDQpTb3VuZHMgbGlrZSBhbiBG</file>
+<file name="dummyvideo.vtt" path="/" encoding="base64">V0VCVlRUDQoNCkNIQVBURVIgMQ0KMDA6MDA6MTAuMDAwIC0tPiAwMDowMDozMC4wMDANCkludHJvDQogDQoNCkNIQVBURVIgMg0KMDA6MDA6MzAuMDAwIC0tPiAwMDowMDo1Ny4wMDANClBob3RvLCBQaG9uZWJvb2ssIFBoZWFzYW50DQogDQoNCkNIQVBURVIgMw0KMDA6MDA6NTcuMDAwIC0tPiAwMDowMTowNS4wMDANCkRydW0gU29sbw0KIA0KDQpDSEFQVEVSIDQNCjAwOjAxOjA1LjAwMCAtLT4gMDA6MDE6MTYuMDAwDQpTb3VuZHMgbGlrZSBhbiBG</file>
+    </questiontext>
+    <generalfeedback format="html">
+      <text></text>
+    </generalfeedback>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.1</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+    <stackversion>
+      <text>2020120600</text>
+    </stackversion>
+    <questionvariables>
+      <text><![CDATA[list: [["a1",5,"Test"],["a2",10,"Langer text hier"],["a3",20,"unnötig"]];
 
-<div id="zahl" style="display: none;">
-[[input:ansZ]][[validation:ansZ]][[feedback:prtZ]]
-</div>
+v1: 2;
+v2: 7;
+tans1: v1+v2;]]></text>
+    </questionvariables>
+    <specificfeedback format="html">
+      <text></text>
+    </specificfeedback>
+    <questionnote>
+      <text></text>
+    </questionnote>
+    <questionsimplify>1</questionsimplify>
+    <assumepositive>0</assumepositive>
+    <assumereal>0</assumereal>
+    <prtcorrect format="html">
+      <text>Richtige Antwort, gut gemacht!</text>
+    </prtcorrect>
+    <prtpartiallycorrect format="html">
+      <text>Ihre Antwort ist teilweise korrekt.</text>
+    </prtpartiallycorrect>
+    <prtincorrect format="html">
+      <text>Falsche Antwort.</text>
+    </prtincorrect>
+    <multiplicationsign>dot</multiplicationsign>
+    <sqrtsign>1</sqrtsign>
+    <complexno>i</complexno>
+    <inversetrig>cos-1</inversetrig>
+    <logicsymbol>lang</logicsymbol>
+    <matrixparens>[</matrixparens>
+    <variantsselectionseed></variantsselectionseed>
+    <input>
+      <name>ans1</name>
+      <type>numerical</type>
+      <tans>tans1</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>1</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>1</mustverify>
+      <showvalidation>3</showvalidation>
+      <options></options>
+    </input>
+    <input>
+      <name>ans2</name>
+      <type>numerical</type>
+      <tans>tans1</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>1</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>1</mustverify>
+      <showvalidation>3</showvalidation>
+      <options></options>
+    </input>
+    <input>
+      <name>ans3</name>
+      <type>numerical</type>
+      <tans>tans1</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>1</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>1</mustverify>
+      <showvalidation>1</showvalidation>
+      <options></options>
+    </input>
+    <prt>
+      <name>prt1</name>
+      <value>1.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>1</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>AlgEquiv</answertest>
+        <sans>ans1</sans>
+        <tans>tans1</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prt1-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prt1-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+    <prt>
+      <name>prt2</name>
+      <value>1.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>1</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>AlgEquiv</answertest>
+        <sans>ans2</sans>
+        <tans>tans1</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prt2-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prt2-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+    <prt>
+      <name>prt3</name>
+      <value>1.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>1</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>AlgEquiv</answertest>
+        <sans>ans3</sans>
+        <tans>tans1</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prt3-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prt3-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+  </question>
+
+</quiz>
