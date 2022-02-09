@@ -1,3 +1,4 @@
+/*
 <script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 
 <script type="text/javascript">
@@ -14,6 +15,7 @@ if (!document.getElementById(cssId))
     head.appendChild(link);
 }
 </script>
+*/
 
 <script type="text/javascript">
 	// Quelle: verändert nach https://www.rub.de/ak-mathe-digital/stackselbstlern.js
@@ -28,7 +30,7 @@ if (!document.getElementById(cssId))
 	  }
 
 	function getState () {
-		if (anzahl < list.length-1) {
+		if (anzahlRichtig < list.length-1) {
 			console.log("#-----# Aktueller Aufgabenstatus #-----#");
 			console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
 			console.log("MaxTime: ", maxtime);
@@ -38,7 +40,13 @@ if (!document.getElementById(cssId))
 			console.log("Aktuelle Videozeit: ", video.currentTime);
 			console.log("");
 		} else {
-			console.log("no further questions to state\n");
+			console.log("#-----# Aktueller Aufgabenstatus #-----#");
+			console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
+			console.log("MaxTime: ", maxtime);
+			console.log("Aktuelle Aufgabe: ", "no further questions to state\n");
+			console.log("Anzahl richtig gelöster Aufgaben: ", anzahlRichtig);
+			console.log("Aktuelle Videozeit: ", video.currentTime);
+			console.log("");
 		}
 	}
 
@@ -77,7 +85,7 @@ if (!document.getElementById(cssId))
 		
 		// if we are not waiting for .vjs-progress-holder in addition to loadedmetadata we might not find the right element
 		waitForElm('.vjs-progress-holder').then((playheadWell) => {
-			// console.log('Element is ready');
+			console.log('Element is ready');
 			// console.log(playheadWell.textContent);
 			
 			var videoDuration = video.duration;
@@ -96,7 +104,7 @@ if (!document.getElementById(cssId))
 				elem.style.left = list[i][1]/videoDuration*100 + "%";
 				elem.dataset.time = list[i][1];
 				// console.log("time:", list[i][1]);
-				// console.log("elem.style.left", elem.style.left);
+				console.log("elem.style.left", elem.style.left);
 				
 				var elemSpan = document.createElement("span");
 				elemSpan.textContent = list[i][2];
@@ -185,7 +193,7 @@ if (!document.getElementById(cssId))
 <div id="videos">
     <video id="video1" class="video-js vjs-default-skin" controls="" width="640" data-setup='{ "playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "width": 640 }'>
     <source src="https://mediathek.htw-berlin.de/getMedium/Default/531c43cd4e70b7ead9d6b01118ae26a7.mp4" type="video/mp4">
-	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/993999625/dummyvideo.vtt" srclang="en"  label="English" default>
+	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/853464344/dummyvideo.vtt" srclang="en"  label="English" default>
 	</video>
 </div>
 
@@ -253,6 +261,8 @@ if (!document.getElementById(cssId))
     const parent = document.getElementById('targetcard');
 
     document.addEventListener("DOMContentLoaded", function(event) {
+		console.log('DOM is fully loaded');
+		
 		// Check-Button verschieben
         const checkButton = document.querySelector('.im-controls');
 		checkButton.style.textAlign = "center";
@@ -296,6 +306,8 @@ if (!document.getElementById(cssId))
 		if (anzahlRichtig > 0) {
 			document.getElementById("aufgabensammlung").style.display = "block";
 		}
+		
+		document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
     });
 		
 
@@ -342,6 +354,7 @@ if (!document.getElementById(cssId))
 	});
 	
 	video.onloadedmetadata = function() {
+		console.log('metadata loaded');
 		list[list.length-1] = (["none",video.duration]);
 		maxtime = list[anzahlRichtig][1];
 		
@@ -353,13 +366,9 @@ if (!document.getElementById(cssId))
 			var currTime = 0;
 		}
 		
-		if (anzahlRichtig > 0) {
-			//var currTime = list[anzahlRichtig-1][1];
-			
-			timeTracking["watchedTime"] = currTime;
-			timeTracking["currentTime"] = currTime;
-			video.currentTime = currTime;
-		}
+		timeTracking["watchedTime"] = currTime;
+		timeTracking["currentTime"] = currTime;
+		video.currentTime = currTime;
 		
 		addMarkers(); // manchmal wurden die Marker nicht richtig eingefügt. Eiun spezieller Observer hat geholfen
 		
@@ -368,19 +377,15 @@ if (!document.getElementById(cssId))
 		
 	};
 
+/*
 	window.onload = (event) => {
-		// console.log('page is fully loaded');
+		console.log('page is fully loaded');
 		// document.getElementsByClassName("vjs-big-play-button")[0].style.display = "none";
 		// document.getElementsByClassName("vjs-control-bar")[0].style.display = "flex";
 		
-		/*
-		if (document.querySelector('#zaehler')) {
-			document.querySelector('#zaehlershow').innerHTML=document.querySelector('#zaehler').innerHTML;
-		};
-		*/
-		
 		document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
 	};
+*/
 </script>
 
 <div id="zahl" style="display: none;">
