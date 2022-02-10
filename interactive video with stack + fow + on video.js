@@ -1,4 +1,8 @@
 /*
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+*/
+
+/*
 <script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 
 <script type="text/javascript">
@@ -27,6 +31,11 @@ if (!document.getElementById(cssId))
 		displaycache[s] = "block";
 		sessionStorage.setItem("displaycache" + aufgabennummer, JSON.stringify(displaycache));
 		*/
+	  }
+	  
+	  function unhide(s) {
+		document.getElementById(s).style.visibility = 'visible';
+		console.log(document.getElementById(s).style.visibility);
 	  }
 
 	function getState () {
@@ -71,10 +80,20 @@ if (!document.getElementById(cssId))
 		if (video.currentTime >= maxtime) {
 			video.pause();
 			getState();
-			if (anzahl < list.length-1) {
+			if (anzahlRichtig < list.length-1) {
 				show(list[anzahlRichtig][0]);
+				unhide("targetcard");
 			}
 		}
+	}
+	
+	function toggleQuestionCanvas() {
+	  var x = document.getElementById("targetcard");
+	  if (x.style.visibility === "hidden") {
+		x.style.visibility = "visible";
+	  } else {
+		x.style.visibility = "hidden";
+	  }
 	}
 	
 	// Chapter markers
@@ -96,7 +115,7 @@ if (!document.getElementById(cssId))
 
 			// Loop over each cue point, dynamically create a div for each
 			// then place in div progress bar
-			for (i = 0; i <= anzahl && i < list.length-1; i++) {
+			for (i = 0; i <= anzahlRichtig && i < list.length-1; i++) {
 				
 				var elem = document.createElement("div");
 				elem.className = "vjs-marker";
@@ -159,7 +178,7 @@ if (!document.getElementById(cssId))
 		}
 		
 		function uebertrage(){
-			console.log("SPeichere aktuelel Position");
+			console.log("Speichere aktuelle Position");
 			document.querySelector('#zahl').querySelector('input').value=video.currentTime;
 			
 			// document.querySelector('input[type="submit"]').click();
@@ -209,13 +228,16 @@ if (!document.getElementById(cssId))
         <input type="range" min="0" max="100" value="100" class="slider" id="myRange">
     </div>
 	<button onclick="setval(5);" class="btn btn-danger" type="button">+5</button>
+	<button onclick="toggleQuestionCanvas(); return false;">Click Me</button>
 </div>
 
 /* Anzeige aktueller Aufgabe */
-<div id="targetcard" class="card">
-	<div class="card-header" id="headAktuelleAufgabe">
-		<h4 class="card-title">aktuelle Aufgabe</h4>
-	</div>
+<div id="targetcard" class="card" style="visibility: hidden;">
+	<h4 class="card-header" id="targetcardHeader">aktuelle Aufgabe<button type="button" class="close" onclick="toggleQuestionCanvas(); return false;">
+          <span aria-hidden="true">&times;</span>
+        </button></h4>
+	<div class="card-footer" id="targetcardFooter">
+  </div>
 </div>
 
 /* Aufgabensammlung */
@@ -259,16 +281,25 @@ if (!document.getElementById(cssId))
         video.volume = this.value / 100;
     }
 
-    const parent = document.getElementById('targetcard');
-
     document.addEventListener("DOMContentLoaded", function(event) {
 		console.log('DOM is fully loaded');
 		
 		// Check-Button verschieben
-        const checkButton = document.querySelector('.im-controls');
-		checkButton.style.textAlign = "center";
-        checkButton.style.marginBottom = ".5em";
-        parent.insertAdjacentElement('beforeEnd', checkButton);
+		/*
+        const checkButtonArea = document.querySelector('.im-controls');
+		checkButtonArea.style.textAlign = "center";
+        checkButtonArea.style.marginBottom = ".5em";
+		checkButtonArea.style.backgroundColor = "red";
+		checkButtonArea.id = "pruefenButton";
+		*/
+		
+		const checkButton = document.querySelector('input[type="submit"]')
+		checkButton.classList.add("btn-block");
+		checkButton.onclick = function() {uebertrage()};
+		checkButton.style.margin = 0;
+		checkButton.style.borderRadius = 0;
+		
+		document.getElementById('targetcardFooter').insertAdjacentElement('beforeend', checkButton);
 
 		// Aufgabenstatus updaten
 		prtList = document.getElementsByClassName("stackprtfeedback");
@@ -290,6 +321,8 @@ if (!document.getElementById(cssId))
 			document.getElementById(list[i][0]).style.display = "block";
 		}
 		
+		//console.log("AnzhalRichtig: ", anzahlRichtig);
+		
 		aktuelleAufgabe = list[anzahlRichtig][0];
 		maxtime = list[anzahlRichtig][1];
 		
@@ -299,16 +332,15 @@ if (!document.getElementById(cssId))
 		
 		// Neueste Aufgabe verschieben
         var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
+		currentQuestion.classList.add("overflow-auto");
         if (anzahlRichtig < list.length-1) {
-			document.getElementById("headAktuelleAufgabe").insertAdjacentElement('afterend', currentQuestion);
+			document.getElementById('targetcard').children[0].insertAdjacentElement('afterend', currentQuestion);
 		}
 		
 		// Aufgabensammlung anzeigen, wenn nötig
 		if (anzahlRichtig > 0) {
 			document.getElementById("aufgabensammlung").style.display = "block";
 		}
-		
-		document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
     });
 		
 
@@ -362,7 +394,7 @@ if (!document.getElementById(cssId))
 		// setzt Videozeit auf letzten Videostand
 		if (document.querySelector('#zaehler')) {
 			var currTime = (document.querySelector('#zaehler').innerHTML > maxtime ? maxtime : document.querySelector('#zaehler').innerHTML);
-			console.log("Setze Video for bei: ", currTime);
+			console.log("Setze Video fort bei: ", currTime);
 		} else {
 			var currTime = 0;
 		}
@@ -385,28 +417,47 @@ if (!document.getElementById(cssId))
 		});
 	};
 
-/*
+
 	window.onload = (event) => {
 		console.log('page is fully loaded');
 		// document.getElementsByClassName("vjs-big-play-button")[0].style.display = "none";
 		// document.getElementsByClassName("vjs-control-bar")[0].style.display = "flex";
 		
-		document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
+		// document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
+		
+		const playerCanvas = document.querySelector(".video-js")
+		const targetcard = document.querySelector("#targetcard");
+		
+		playerCanvas.appendChild(targetcard);
+		targetcard.style.cssText = `
+		visibility: hidden;
+		position: absolute; 
+		top: 5%; 
+		left: 5%; 
+		width: 90%;
+		height: 85%;
+		font-size: .92345rem;
+		font-weight: 400;
+		line-height: 1.5;
+		text-align: left;
+		color: #000;
+		`;
+		
+		if (anzahlRichtig < anzahl) {
+			unhide("targetcard");
+			console.log("show targetcard");
+		}
 	};
-*/
-
-function toggleQuestionCanvas() {
-  var x = document.getElementById("aufgabensammlung");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-}
+	
+	/*
+	jQuery( document ).ready(function() {
+		console.log("jQuery funnktioniert. document ready");
+		
+		
+	});
+	*/
 </script>
 
 <div id="zahl" style="display: none;">
 [[input:ansZ]][[validation:ansZ]][[feedback:prtZ]]
 </div>
-
-<button onclick="toggleQuestionCanvas(); return false;">Click Me</button>
