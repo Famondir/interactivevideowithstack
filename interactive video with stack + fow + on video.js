@@ -35,7 +35,7 @@ if (!document.getElementById(cssId))
 	  
 	  function unhide(s) {
 		document.getElementById(s).style.visibility = 'visible';
-		console.log(document.getElementById(s).style.visibility);
+		//console.log(document.getElementById(s).style.visibility);
 	  }
 
 	function getState () {
@@ -331,9 +331,9 @@ if (!document.getElementById(cssId))
 		getState();
 		
 		// Neueste Aufgabe verschieben
-        var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
-		currentQuestion.classList.add("overflow-auto");
         if (anzahlRichtig < list.length-1) {
+			var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
+			currentQuestion.classList.add("overflow-auto");
 			document.getElementById('targetcard').children[0].insertAdjacentElement('afterend', currentQuestion);
 		}
 		
@@ -445,7 +445,6 @@ if (!document.getElementById(cssId))
 		
 		if (anzahlRichtig < anzahl) {
 			unhide("targetcard");
-			console.log("show targetcard");
 		}
 	};
 	
