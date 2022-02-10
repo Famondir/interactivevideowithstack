@@ -391,7 +391,6 @@ if (!document.getElementById(cssId))
 		console.log('metadata loaded');
 		list[list.length-1] = (["none",video.duration]);
 		maxtime = list[anzahlRichtig][1];
-		console.log('list?');
 		
 		// setzt Videozeit auf letzten Videostand
 		if (document.querySelector('#zaehler')) {
