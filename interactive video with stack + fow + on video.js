@@ -280,6 +280,9 @@ if (!document.getElementById(cssId))
     slider.oninput = function() {
         video.volume = this.value / 100;
     }
+	
+	list = {#list#};
+	// console.log(list);
 
     document.addEventListener("DOMContentLoaded", function(event) {
 		console.log('DOM is fully loaded');
@@ -306,8 +309,6 @@ if (!document.getElementById(cssId))
 		var prtArray = Array.prototype.slice.call(prtList).filter(function (el) {return !el.classList.contains("stackprtfeedback-prtZ")});
 		anzahl = prtArray.length;
 		
-		list = {#list#};
-		// console.log(list);
 		list.push(["none",video.duration]);
 		//console.log(list);
 		
@@ -390,6 +391,7 @@ if (!document.getElementById(cssId))
 		console.log('metadata loaded');
 		list[list.length-1] = (["none",video.duration]);
 		maxtime = list[anzahlRichtig][1];
+		console.log('list?');
 		
 		// setzt Videozeit auf letzten Videostand
 		if (document.querySelector('#zaehler')) {
