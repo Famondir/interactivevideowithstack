@@ -1,3 +1,1 @@
-function testScript () {
-	alert("klappt");
-}
+<script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
