@@ -4,8 +4,9 @@
 
 <script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 
+
 <script type="text/javascript">
-var cssId = 'myCss';  // you could encode the css path itself to generate id..
+var cssId = 'vjsCSS';  // you could encode the css path itself to generate id..
 if (!document.getElementById(cssId))
 {
     var head  = document.getElementsByTagName('head')[0];
@@ -14,6 +15,21 @@ if (!document.getElementById(cssId))
     link.rel  = 'stylesheet';
     link.type = 'text/css';
     link.href = 'https://vjs.zencdn.net/7.18.0/video-js.css';
+    link.media = 'all';
+    head.appendChild(link);
+}
+</script>
+
+<script type="text/javascript">
+var cssId = 'iconsCSS';  // you could encode the css path itself to generate id..
+if (!document.getElementById(cssId))
+{
+    var head  = document.getElementsByTagName('head')[0];
+    var link  = document.createElement('link');
+    link.id   = cssId;
+    link.rel  = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css';
     link.media = 'all';
     head.appendChild(link);
 }
@@ -266,6 +282,7 @@ if (!document.getElementById(cssId))
 
 <script type="text/javascript">
 	// var video = document.getElementsByTagName("video")[0];
+		
 	var player = videojs("video1");
     var maxtime = 0;
 	var list = null;
@@ -454,6 +471,24 @@ if (!document.getElementById(cssId))
 				player.play();
 			}
 		});
+		
+		var Button = videojs.getComponent('Button');
+		var MyButton = videojs.extend(Button, {
+		  constructor: function() {
+			Button.apply(this, arguments);
+			// initialize your button
+			this.addClass('stack-question-button');
+			this.controlText("toggle question visibility");
+		  },
+		  handleClick: function() {
+			// do something on click
+			toggleQuestionCanvas();
+		  }
+		});
+		videojs.registerComponent('MyButton', MyButton);
+		var player = videojs('video1');		
+		player.getChild('controlBar').addChild('myButton', {}, 1);
+		//document.getElementsByClassName("vjs-current-time")[0].insertBefore('myButton', {});
 		
 	});
 	
