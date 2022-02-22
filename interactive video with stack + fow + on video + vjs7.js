@@ -2,8 +2,31 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 */
 
-<script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
+/*
+<script type="text/javascript">
+// Quelle: https://htmldom.dev/load-a-javascript-file-dynamically/
 
+// Create new script element
+const script = document.createElement('script');
+script.src = 'https://vjs.zencdn.net/7.18.0/video.min.js';
+
+// Append to the `head` element
+document.head.appendChild(script);
+
+const script2 = document.createElement('script');
+script2.src = 'https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js';
+
+// Append to the `head` element
+document.head.appendChild(script2);
+</script>
+
+script.addEventListener('load', function() {
+    // The script is loaded completely
+    // Do something
+});
+*/
+
+<script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js"></script>
 
 <script type="text/javascript">
