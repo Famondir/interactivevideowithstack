@@ -4,6 +4,7 @@
 
 <script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js"></script>
 
 <script type="text/javascript">
 var cssId = 'vjsCSS';  // you could encode the css path itself to generate id..
@@ -228,9 +229,24 @@ if (!document.getElementById(cssId))
 <div id="videos">
     <video-js id="video1" class="video-js vjs-default-skin" controls="" data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true}'>
     <source src="https://mediathek.htw-berlin.de/getMedium/Default/531c43cd4e70b7ead9d6b01118ae26a7.mp4" type="video/mp4">
-	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/925424062/dummyvideo.vtt" srclang="en"  label="English" default>
+	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/863646296/dummyvideo.vtt" srclang="en"  label="English" default>
 	</video-js>
 </div>
+
+/*
+<div id="videos">
+	<video-js
+    id="video1"
+    class="video-js vjs-default-skin"
+    controls
+    autoplay
+    // width="640" height="264"
+    data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true, "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}] }'
+  >
+  </video-js>
+
+</div>
+*/
 
 /* externe Videokontrollelemente */
 <div class="videocontrols">
@@ -388,8 +404,8 @@ if (!document.getElementById(cssId))
 		position: absolute; 
 		top: 5%; 
 		left: 5%; 
-		width: 90%;
-		height: 85%;
+		max-width: 90%;
+		max-height: 80%;
 		font-size: .92345rem;
 		font-weight: 400;
 		line-height: 1.5;
