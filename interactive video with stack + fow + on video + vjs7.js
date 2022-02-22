@@ -28,6 +28,7 @@ script.addEventListener('load', function() {
 
 <script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js"></script>
+<script src="https://videowithstack.4lima.de/stackwithvideo.js"></script>
 
 <script type="text/javascript">
 var cssId = 'vjsCSS';  // you could encode the css path itself to generate id..
