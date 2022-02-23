@@ -81,19 +81,7 @@ if (!document.getElementById(cssId)) {
 		#targetcardFooter {
 			padding: 0px !important;
 		} 
-		
-		.stack-question-button, .video-js .stack-question-button .vjs-icon-placeholder {
-			font-family: FontAwesome;
-			font-weight: normal;
-			font-style: normal;
-			display: inline-block;
-			text-decoration: inherit;
-		} 
-		
-		.stack-question-button, .video-js .stack-question-button .vjs-icon-placeholder:before {
-			content: "\uf046"
-		} 
-		
+				
 		#targetcard {
 			/* hier sollte man das div zentrieren*/
 		}
@@ -107,8 +95,8 @@ if (!document.getElementById(cssId)) {
 		
 		/* Define the size of the default icons */ 
 		.fa-svg-icon svg {
-			height:1em; 
-			width:1em;
+			height:1.8em; 
+			width:1.8em;
 		} 
 		
 		/* Positionate the SVG correctly */ 
