@@ -1,3 +1,5 @@
+/* global document */
+
 /**
  * Copyright (c) 2022
  *
@@ -9,10 +11,10 @@
  * Created at     : 2022-02-16
  * Last modified  : 2022-02-24
  */
- 
+
 // #----------# defining functions #----------#
 
-function loadCSS (cssId, cssUrl) {
+function loadCSS(cssId, cssUrl) {
 	if (!document.getElementById(cssId)) {
 		var cssLink  = document.createElement('link');
 		cssLink.id   = cssId;
@@ -21,6 +23,56 @@ function loadCSS (cssId, cssUrl) {
 		cssLink.href = cssUrl;
 		cssLink.media = 'all';
 		document.head.appendChild(cssLink);
+	}
+}
+
+function showD(s) {
+	document.getElementById(s).style.display = 'block';
+}
+
+function showV(s) {
+	document.getElementById(s).style.visibility = 'visible';
+}
+
+function toggleV(s) {
+  var x = document.getElementById(s);
+  if (x.style.visibility === "hidden") {
+	x.style.visibility = "visible";
+  } else {
+	x.style.visibility = "hidden";
+  }
+}
+
+function stateQuestion(event) {
+	if (player.currentTime() >= maxtime) {
+		player.pause();
+		// getState();
+		
+		if (anzahlRichtig < list.length-1) {
+			showD(list[anzahlRichtig][0]);
+			showV("questionCanvas");
+		}
+	}
+}
+
+function getState() {
+	if (anzahlRichtig < list.length-1) {
+		console.log("#-----# Aktueller Aufgabenstatus #-----#");
+		console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
+		console.log("MaxTime: ", maxtime);
+		console.log("Aktuelle Aufgabe: ", aktuelleAufgabe);
+		console.log("aktuelle Aufgabe sichtbar?: ", (document.getElementById(aktuelleAufgabe).style.display != 'none'));
+		console.log("Anzahl richtig gelöster Aufgaben: ", anzahlRichtig);
+		console.log("Aktuelle Videozeit: ", player.currentTime());
+		console.log("");
+	} else {
+		console.log("#-----# Aktueller Aufgabenstatus #-----#");
+		console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
+		console.log("MaxTime: ", maxtime);
+		console.log("Aktuelle Aufgabe: ", "no further questions to state\n");
+		console.log("Anzahl richtig gelöster Aufgaben: ", anzahlRichtig);
+		console.log("Aktuelle Videozeit: ", player.currentTime());
+		console.log("");
 	}
 }
  

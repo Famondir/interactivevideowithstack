@@ -3,81 +3,6 @@
 <script src="https://videowithstack.4lima.de/stackwithvideo.js"></script>
 
 <script type="text/javascript">
-	// Quelle: verändert nach https://www.rub.de/ak-mathe-digital/stackselbstlern.js
-	function show(s) {
-		document.getElementById(s).style.display = 'block';
-		/*document.getElementById(s).scrollIntoView();
-		document.getElementById(s).focus(); 
-		var displaycache = JSON.parse(sessionStorage.getItem("displaycache" + aufgabennummer));
-		displaycache[s] = "block";
-		sessionStorage.setItem("displaycache" + aufgabennummer, JSON.stringify(displaycache));
-		*/
-	  }
-	  
-	  function unhide(s) {
-		document.getElementById(s).style.visibility = 'visible';
-		//console.log(document.getElementById(s).style.visibility);
-	  }
-
-	function getState () {
-		if (anzahlRichtig < list.length-1) {
-			console.log("#-----# Aktueller Aufgabenstatus #-----#");
-			console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
-			console.log("MaxTime: ", maxtime);
-			console.log("Aktuelle Aufgabe: ", aktuelleAufgabe);
-			console.log("aktuelle Aufgabe sichtbar?: ", (document.getElementById(aktuelleAufgabe).style.display != 'none'));
-			console.log("Anzahl richtig gelöster Aufgaben: ", anzahlRichtig);
-			console.log("Aktuelle Videozeit: ", player.currentTime());
-			console.log("");
-		} else {
-			console.log("#-----# Aktueller Aufgabenstatus #-----#");
-			console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
-			console.log("MaxTime: ", maxtime);
-			console.log("Aktuelle Aufgabe: ", "no further questions to state\n");
-			console.log("Anzahl richtig gelöster Aufgaben: ", anzahlRichtig);
-			console.log("Aktuelle Videozeit: ", player.currentTime());
-			console.log("");
-		}
-	}
-
-	function playNext(start = 0, end = 5) {
-		player.currentTime(start);
-		maxtime = end;
-		player.play();
-	}
-	
-	function playCurrent() {
-		if (anzahlRichtig > 0) {
-			player.currentTime(list[anzahlRichtig-1][1]);
-		} else {
-			player.currentTime(0);
-		}
-		
-		maxtime = list[anzahlRichtig][1];
-		player.play();
-	}
-
-	function stateQuestion(event) {
-		if (player.currentTime() >= maxtime) {
-			player.pause();
-			getState();
-			
-			if (anzahlRichtig < list.length-1) {
-				show(list[anzahlRichtig][0]);
-				unhide("targetcard");
-			}
-		}
-	}
-	
-	function toggleQuestionCanvas() {
-	  var x = document.getElementById("targetcard");
-	  if (x.style.visibility === "hidden") {
-		x.style.visibility = "visible";
-	  } else {
-		x.style.visibility = "hidden";
-	  }
-	}
-	
 	// Chapter markers
 	// Quellen: https://codepen.io/nickwanhere/pen/gOMderr und https://codepen.io/team/rcrooks1969/pen/LJBdPJ
 	function addMarkers() {
@@ -214,26 +139,12 @@
 </div>
 */
 
-/* externe Videokontrollelemente */
-<div class="videocontrols">
-<button onclick="playCurrent();" class="btn btn-primary" type="button">Spiele aktuellen Abschnitt</button>
-    <button onclick="playNext();" class="btn btn-primary" type="button">Play</button>
-    <button onclick="stop();" class="btn btn-danger" type="button">Pause</button>
-    <button onclick="mute();" class="btn btn-danger" type="button">Mute</button>
-    <button onclick="unmute();" class="btn btn-danger" type="button">Unmute</button>
-    <div class="slidecontainer">
-        <input type="range" min="0" max="100" value="100" class="slider" id="myRange">
-    </div>
-	<button onclick="setval(5);" class="btn btn-danger" type="button">+5</button>
-	<button onclick="toggleQuestionCanvas(); return false;">Click Me</button>
-</div>
-
 /* Anzeige aktueller Aufgabe */
-<div id="targetcard" class="card" style="visibility: hidden;">
-	<h4 class="card-header" id="targetcardHeader">aktuelle Aufgabe<button type="button" class="close" onclick="toggleQuestionCanvas(); return false;">
+<div id="questionCanvas" class="card" style="visibility: hidden;">
+	<h4 class="card-header" id="questionCanvasHeader">aktuelle Aufgabe<button type="button" class="close" onclick="toggleV('questionCanvas'); return false;">
           <span aria-hidden="true">&times;</span>
         </button></h4>
-	<div class="card-footer" id="targetcardFooter">
+	<div class="card-footer" id="questionCanvasFooter">
   </div>
 </div>
 
@@ -301,7 +212,7 @@
 		checkButton.style.margin = 0;
 		checkButton.style.borderRadius = 0;
 		
-		document.getElementById('targetcardFooter').insertAdjacentElement('beforeend', checkButton);
+		document.getElementById('questionCanvasFooter').insertAdjacentElement('beforeend', checkButton);
 
 		// Aufgabenstatus updaten
 		prtList = document.getElementsByClassName("stackprtfeedback");
@@ -334,7 +245,7 @@
         if (anzahlRichtig < list.length-1) {
 			var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
 			currentQuestion.classList.add("overflow-auto");
-			document.getElementById('targetcard').children[0].insertAdjacentElement('afterend', currentQuestion);
+			document.getElementById('questionCanvas').children[0].insertAdjacentElement('afterend', currentQuestion);
 		}
 		
 		// Aufgabensammlung anzeigen, wenn nötig
@@ -362,10 +273,10 @@
 		// document.querySelector('input[type="submit"]').onclick = function() {uebertrage()};
 		
 		const playerCanvas = document.querySelector(".video-js")
-		const targetcard = document.querySelector("#targetcard");
+		const questionCanvas = document.querySelector("#questionCanvas");
 		
-		playerCanvas.appendChild(targetcard);
-		targetcard.style.cssText = `
+		playerCanvas.appendChild(questionCanvas);
+		questionCanvas.style.cssText = `
 		visibility: hidden;
 		position: absolute; 
 		top: 5%; 
@@ -380,7 +291,7 @@
 		`;
 		
 		if (anzahlRichtig < anzahl) {
-			unhide("targetcard");
+			showV("questionCanvas");
 		}
 	};
 	
@@ -464,7 +375,7 @@
 		  },
 		  handleClick: function() {
 			// do something on click
-			toggleQuestionCanvas();
+			toggleV('questionCanvas');
 		  }
 		});
 		videojs.registerComponent('MyButton', MyButton);
