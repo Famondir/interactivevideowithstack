@@ -185,11 +185,6 @@
 	var aktuelleAufgabe = "";
 
     var slider = document.getElementById("myRange");
-
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function() {
-        player.volume(this.value / 100);
-    }
 	
 	list = {#list#};
 	// console.log(list);
@@ -274,6 +269,15 @@
 		
 		const playerCanvas = document.querySelector(".video-js")
 		const questionCanvas = document.querySelector("#questionCanvas");
+		
+		/*
+		var pCWidth = playerCanvas.clientWidth;
+		var pCHeight = playerCanvas.clientHeight;
+		var qCWidth = playerCanvas.clientWidth;
+		var qCHeight = playerCanvas.clientHeight;
+		
+		console.log("Width: "+pCWidth);
+		*/
 		
 		playerCanvas.appendChild(questionCanvas);
 		questionCanvas.style.cssText = `
