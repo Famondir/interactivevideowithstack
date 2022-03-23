@@ -14,7 +14,7 @@
 
 // #----------# defining functions #----------#
 
-function loadCSS(cssId, cssUrl) {
+function loadCSS(cssId, cssUrl) { // lädt eine CSS Datei anhand ihrer URL
 	if (!document.getElementById(cssId)) {
 		var cssLink  = document.createElement('link');
 		cssLink.id   = cssId;
@@ -26,15 +26,15 @@ function loadCSS(cssId, cssUrl) {
 	}
 }
 
-function showD(s) {
+function showD(s) { // schaltet ein Element sichtbar via display-Wert
 	document.getElementById(s).style.display = 'block';
 }
 
-function showV(s) {
+function showV(s) { // schaltet ein Element sichtbar via visible-Wert
 	document.getElementById(s).style.visibility = 'visible';
 }
 
-function toggleV(s) {
+function toggleV(s) { // schaltet zwischen Sichtbarkeit und Unsichtbarkeit hin und her (bezogen auf visibility-Wert)
   var x = document.getElementById(s);
   if (x.style.visibility === "hidden") {
 	x.style.visibility = "visible";
@@ -44,11 +44,11 @@ function toggleV(s) {
 }
 
 function stateQuestion(event) {
-	if (player.currentTime() >= maxtime) {
+	if (player.currentTime() >= maxtime) { // wenn das Video am Ende des aktuellen Abschnitts angekommen ist
 		player.pause();
 		// getState();
 		
-		if (anzahlRichtig < list.length-1) {
+		if (anzahlRichtig < list.length-1) { // zeige die nächste Aufgabe, wenn es noch eine gibt
 			showD(list[anzahlRichtig][0]);
 			showV("questionCanvas");
 		}
@@ -56,7 +56,7 @@ function stateQuestion(event) {
 }
 
 function getState() {
-	if (anzahlRichtig < list.length-1) {
+	if (anzahlRichtig < list.length-1) { // es wurden noch nicht alle Fragen angezeigt
 		console.log("#-----# Aktueller Aufgabenstatus #-----#");
 		console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
 		console.log("MaxTime: ", maxtime);
@@ -65,7 +65,7 @@ function getState() {
 		console.log("Anzahl richtig gelöster Aufgaben: ", anzahlRichtig);
 		console.log("Aktuelle Videozeit: ", player.currentTime());
 		console.log("");
-	} else {
+	} else { // es gibt keine weitere Aufgabe mehr
 		console.log("#-----# Aktueller Aufgabenstatus #-----#");
 		console.log("Sichtbare prt-Feedbackfelder: ", anzahl);
 		console.log("MaxTime: ", maxtime);

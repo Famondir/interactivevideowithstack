@@ -55,8 +55,8 @@
 				var elemSpan = document.createElement("span");
 				elemSpan.textContent = "Hierhin können Sie noch nicht springen.";
 				elem.appendChild(elemSpan);
-				elem.style.left = list[anzahl][1]/videoDuration*100 + "%";
-				elem.style.width = (100-list[anzahl][1]/videoDuration*100) + "%"
+				elem.style.left = list[anzahlRichtig][1]/videoDuration*100 + "%";
+				elem.style.width = (100-list[anzahlRichtig][1]/videoDuration*100) + "%"
 				
 				playheadWell.appendChild(elem);
 		});
@@ -92,35 +92,11 @@
 		};
 </script>
 
-<script type="text/javascript">
-	function setval(varval) {
-		maxtime = maxtime + varval;
-		// alert(maxtime);
-		play();
-	}
-
-	function play() {
-		player.play;
-	}
-
-	function stop() {
-		player.pause();
-	}
-
-	function mute() {
-		player.volume(0);
-	}
-
-	function unmute() {
-		player.volume(1);
-	}
-</script>
-
 /* Video einbinden */
 <div id="interactiveVideo" class = "mt-2 mb-2">
     <video-js id="video1" class="video-js vjs-default-skin" controls="" data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true}'>
     <source src="https://mediathek.htw-berlin.de/getMedium/Default/531c43cd4e70b7ead9d6b01118ae26a7.mp4" type="video/mp4">
-	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/355323112/dummyvideo.vtt" srclang="en"  label="English" default>
+	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/225097119/dummyvideo.vtt" srclang="en"  label="English" default>
 	</video-js>
 </div>
 
@@ -270,14 +246,12 @@
 		const playerCanvas = document.querySelector(".video-js")
 		const questionCanvas = document.querySelector("#questionCanvas");
 		
-		/*
 		var pCWidth = playerCanvas.clientWidth;
 		var pCHeight = playerCanvas.clientHeight;
 		var qCWidth = playerCanvas.clientWidth;
 		var qCHeight = playerCanvas.clientHeight;
 		
 		console.log("Width: "+pCWidth);
-		*/
 		
 		playerCanvas.appendChild(questionCanvas);
 		questionCanvas.style.cssText = `
