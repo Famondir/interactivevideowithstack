@@ -7,7 +7,7 @@
  * @author Simon Schäfer <Simon.Schaefer@HTW-Berlin.de>
  *
  * Created at     : 2022-02-24
- * Last modified  : 2022-02-24
+ * Last modified  : 2023-02-25
  */
  
 .vjs-marker {
@@ -59,15 +59,7 @@
 	background-color: white;
 }*/
 
-#targetcardFooter {
-	padding: 0px !important;
-} 
-		
-#targetcard {
-	/* hier sollte man das div zentrieren*/
-}
-
-.fa-svg-icon {
+.svg-icon {
 	display: inline-flex;
 	align-self: center;
 	/* Define a global color for the icons In this case white */
@@ -75,17 +67,37 @@
 } 
 
 /* Define the size of the default icons */ 
-.fa-svg-icon svg {
+.svg-icon svg {
 	height:1.8em; 
 	width:1.8em;
 } 
 
 /* Positionate the SVG correctly */ 
-.fa-svg-icon.svg-baseline svg {
+.svg-icon.svg-baseline svg {
 	top: .125em;
 	position: relative;
 }
 
+#questionCanvas {
+	visibility: hidden;
+	position: absolute; 
+	top: calc(50% - 1rem);
+	left: 50%; 
+	max-width: calc(100% - 2rem);
+	max-height: calc(100% - 4rem);
+	font-size: .92345rem;
+	font-weight: 400;
+	line-height: 1.5;
+	text-align: left;
+	color: #000;
+	transform: translate(-50%, -50%);
+}
+
 #questionCanvasFooter {
 	padding: 0;
+}
+
+.btn-block-full {
+	margin: 0 !important;
+	border-radius: 0;
 }
