@@ -75,6 +75,85 @@ function getState() {
 		console.log("");
 	}
 }
+
+function uebertrage(){
+	console.log("Speichere aktuelle Videoposition");
+	document.querySelector('#zahl').querySelector('input').value=player.currentTime();
+};
+
+// Quelle: https://stackoverflow.com/a/61511955/14406173
+function waitForElm(selector) {
+	return new Promise(resolve => {
+		if (document.querySelector(selector)) {
+			return resolve(document.querySelector(selector));
+		}
+
+		const observer = new MutationObserver(mutations => {
+			if (document.querySelector(selector)) {
+				resolve(document.querySelector(selector));
+				observer.disconnect();
+			}
+		});
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true
+		});
+	});
+}
+
+// Chapter markers and disabled timebar for video
+// Quellen: https://codepen.io/nickwanhere/pen/gOMderr und https://codepen.io/team/rcrooks1969/pen/LJBdPJ
+function addMarkers() {
+	
+	// if we are not waiting for .vjs-progress-holder in addition to loadedmetadata we might not find the right element
+	waitForElm('.vjs-progress-holder').then((progressHolder) => {
+		// console.log('vjs-progress-holder is ready');
+		
+		var videoDuration = player.duration();
+		console.log("Videolänge beträgt: "+videoDuration);
+
+		// Loop over each cue point, dynamically create a div for each
+		// then place div in progress bar
+		for (i = 0; i <= anzahlRichtig && i < list.length-1; i++) {
+			
+			var elem = document.createElement("div");
+			elem.className = "vjs-marker";
+			elem.id = "cp" + i;
+			elem.style.left = list[i][1]/videoDuration*100 + "%";
+			elem.dataset.time = list[i][1];
+			
+			var elemSpan = document.createElement("span");
+			elemSpan.textContent = list[i][2];
+			elem.appendChild(elemSpan);
+			
+			elem.onclick = function () {
+				if (this.dataset.time <= maxtime) {
+					player.currentTime(this.dataset.time);
+					console.log("Sprung erfolgreich.");
+					stateQuestion(); // zeigt neue Aufgabe, wenn der Sprungmarker der neueste ist
+				} else {
+					console.log("Hier darfst du noch nicht hin springen.");
+				}
+			};
+			
+			progressHolder.appendChild(elem);
+		}
+		
+		// Add blocker
+			var elem = document.createElement("div");
+			elem.className = "vjs-marker vjs-blocker";
+			elem.style.left = list[anzahlRichtig][1]/videoDuration*100 + "%";
+			elem.style.width = (100-list[anzahlRichtig][1]/videoDuration*100) + "%"
+			
+			var elemSpan = document.createElement("span");
+			elemSpan.textContent = "Hierhin können Sie noch nicht springen.";
+			elem.appendChild(elemSpan);
+			
+			progressHolder.appendChild(elem);
+	});
+		
+}
  
 // #----------# loading CSS #----------#
  

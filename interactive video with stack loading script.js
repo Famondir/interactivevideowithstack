@@ -2,114 +2,18 @@
 <script src="https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js"></script>
 <script src="https://videowithstack.4lima.de/stackwithvideo.js"></script>
 
-<script type="text/javascript">
-	// Chapter markers
-	// Quellen: https://codepen.io/nickwanhere/pen/gOMderr und https://codepen.io/team/rcrooks1969/pen/LJBdPJ
-	function addMarkers() {
-		
-		// var playheadWell = document.getElementsByClassName("vjs-progress-control vjs-control")[0].children[0];
-		
-		// if we are not waiting for .vjs-progress-holder in addition to loadedmetadata we might not find the right element
-		waitForElm('.vjs-progress-holder').then((playheadWell) => {
-			console.log('Element is ready');
-			// console.log(playheadWell.textContent);
-			
-			var videoDuration = player.duration();
-
-			// console.log(playheadWell);
-			console.log(videoDuration);
-			// console.log("fügt Marker hinzu");
-
-			// Loop over each cue point, dynamically create a div for each
-			// then place in div progress bar
-			for (i = 0; i <= anzahlRichtig && i < list.length-1; i++) {
-				
-				var elem = document.createElement("div");
-				elem.className = "vjs-marker";
-				elem.id = "cp" + i;
-				elem.style.left = list[i][1]/videoDuration*100 + "%";
-				elem.dataset.time = list[i][1];
-				// console.log("time:", list[i][1]);
-				console.log("elem.style.left", elem.style.left);
-				
-				var elemSpan = document.createElement("span");
-				elemSpan.textContent = list[i][2];
-				elem.appendChild(elemSpan);
-				
-				elem.onclick = function () {
-					if (this.dataset.time <= maxtime) {
-						console.log("Sprung erfolgreich.");
-						player.currentTime(this.dataset.time);
-						stateQuestion();
-					} else {
-						console.log("Hier darfst du noch nicht hin springen.");
-					}
-				};
-				
-				playheadWell.appendChild(elem);
-			}
-			
-			// Add blocker
-				var elem = document.createElement("div");
-				elem.className = "vjs-marker vjs-blocker";
-				var elemSpan = document.createElement("span");
-				elemSpan.textContent = "Hierhin können Sie noch nicht springen.";
-				elem.appendChild(elemSpan);
-				elem.style.left = list[anzahlRichtig][1]/videoDuration*100 + "%";
-				elem.style.width = (100-list[anzahlRichtig][1]/videoDuration*100) + "%"
-				
-				playheadWell.appendChild(elem);
-		});
-			
-	}
-		
-		// Quelle: https://stackoverflow.com/a/61511955/14406173
-		function waitForElm(selector) {
-			return new Promise(resolve => {
-				if (document.querySelector(selector)) {
-					return resolve(document.querySelector(selector));
-				}
-
-				const observer = new MutationObserver(mutations => {
-					if (document.querySelector(selector)) {
-						resolve(document.querySelector(selector));
-						observer.disconnect();
-					}
-				});
-
-				observer.observe(document.body, {
-					childList: true,
-					subtree: true
-				});
-			});
-		}
-		
-		function uebertrage(){
-			console.log("Speichere aktuelle Position");
-			document.querySelector('#zahl').querySelector('input').value=player.currentTime();
-			
-			// document.querySelector('input[type="submit"]').click();
-		};
-</script>
-
 /* Video einbinden */
 <div id="interactiveVideo" class = "mt-2 mb-2">
-    <video-js id="video1" class="video-js vjs-default-skin" controls="" data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true}'>
+    <video-js id="video1" class="video-js vjs-default-skin" controls
+	data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true}'>
     <source src="https://mediathek.htw-berlin.de/getMedium/Default/531c43cd4e70b7ead9d6b01118ae26a7.mp4" type="video/mp4">
-	<track kind="chapters" src="https://moodle.htw-berlin.de/draftfile.php/1230510/user/draft/225097119/dummyvideo.vtt" srclang="en"  label="English" default>
 	</video-js>
 </div>
 
 /*
 <div id="interactiveVideo">
-	<video-js
-    id="video1"
-    class="video-js vjs-default-skin"
-    controls
-    autoplay
-    // width="640" height="264"
-    data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true, "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}] }'
-  >
+	<video-js id="video1" class="video-js vjs-default-skin" controls
+    data-setup='{"playbackRates": [0.75, 0.9, 1, 1.1, 1.25, 1.5], "fluid": true, "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"}] }'>
   </video-js>
 
 </div>
