@@ -170,6 +170,7 @@ loadCSS(cssId, 'https://videowithstack.4lima.de/stackwithvideo.css');
 var player = null;
 var maxtime = 0;
 var list = null;
+var options = null;
 var prtList = null;
 var anzahl = 0;
 var anzahlRichtig = 0;
@@ -327,7 +328,42 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	if (anzahlRichtig < list.length-1) { // wenn noch nicht alle Aufgaben gelöst wurden
 		var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
 		currentQuestion.classList.add("overflow-auto"); // lässt scrollen, falls Inhalt zu große für Anzeigefeld
-		document.getElementById('questionCanvas').children[0].insertAdjacentElement('afterend', currentQuestion); // verschiebt die Aufgabe in den PLatzhalter
+		document.getElementById('questionCanvasHeader').insertAdjacentElement('afterend', currentQuestion); // verschiebt die Aufgabe in den Platzhalter
+	}
+	
+	// Alte Aufgaben verschieben
+	if (options[0][1] == "player") {		
+		document.getElementById('questionCanvas').insertAdjacentHTML('afterbegin', `
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+			  <li class="nav-item" role="presentation">
+				<a class="nav-link active" id="question-tab" data-toggle="tab" href="#questionTab" role="tab" aria-controls="home" aria-selected="true">Aktuelle Aufgabe</a>
+			  </li>
+			  <li class="nav-item" role="presentation">
+				<a class="nav-link" id="archive-tab" data-toggle="tab" href="#archiveTab" role="tab" aria-controls="profile" aria-selected="false">Aufgabensammlung</a>
+			  </li>
+			</ul>
+			<div class="tab-content" id="myTabContent">
+			  <div class="tab-pane fade show active" id="questionTab" role="tabpanel" aria-labelledby="question-tab"></div>
+			  <div class="tab-pane fade" id="archiveTab" role="tabpanel" aria-labelledby="archive-tab"></div>
+			</div>
+		`);
+		
+		var qArchive = document.querySelector("#aufgabensammlung")
+		document.getElementById('archiveTab').insertAdjacentElement('beforeend', qArchive);
+		document.getElementById('aufgabensammlungHeader').insertAdjacentHTML('beforeend', `
+			<button type="button" class="close ml-4" onclick="toggleV('questionCanvas'); return false;"  id="closeButton2">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		`);
+		
+		if (anzahlRichtig < list.length-1) { // wenn noch nicht alle Aufgaben gelöst wurden
+			var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
+			currentQuestion.classList.add("overflow-auto"); // lässt scrollen, falls Inhalt zu große für Anzeigefeld
+			document.getElementById('questionTab').insertAdjacentElement('afterbegin', currentQuestion); // verschiebt die Aufgabe in den Platzhalter
+		} 
+		
+		var qHeader = document.getElementById('questionCanvasHeader');
+		document.getElementById('questionTab').insertAdjacentElement('afterbegin', qHeader);
 	}
 	
 	// Aufgabensammlung anzeigen, wenn nötig

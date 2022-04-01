@@ -4,6 +4,7 @@
 
 <script type="text/javascript">
 	list = {#list#};
+	options = {#options#}
 </script>
 
 /* Video per Direktlink einbinden */
@@ -29,7 +30,7 @@ wird per JS auf das Videoelement verschoben
  */
 <div id="questionCanvas" class="card" style="visibility: hidden;">
 	<h4 class="card-header" id="questionCanvasHeader">aktuelle Aufgabe
-		<button type="button" class="close" onclick="toggleV('questionCanvas'); return false;"> /* don't reload the page */
+		<button type="button" class="close ml-4" onclick="toggleV('questionCanvas'); return false;"  id="closeButton"> /* don't reload the page */
           <span aria-hidden="true">&times;</span>
         </button>
 	</h4>
@@ -43,9 +44,7 @@ hier werden alle Aufgaben gestellt
 bereits richtig beantwortete Aufgaben sieht man dann hier (als Archiv)
 */
 <div id="aufgabensammlung" class="card bg-light" style="display: none;">
-	<div class="card-header">
-		<h4 class="card-title">Richtig beantwortete Aufgaben</h4>
-	</div>
+	<h4 class="card-header"  id="aufgabensammlungHeader">Richtig beantwortete Aufgaben</h4>
     <div class="card-body" id="a1" style="display: none;"> /* id muss mit erstem Eintrag in Stackliste übereinstimmen */
         <h5 class="card-title">Aufgabe 1</h5>
         <p class="card-text">Was ergibt \({@v1@}+{@v2@}\)?</p>
@@ -69,4 +68,3 @@ bereits richtig beantwortete Aufgaben sieht man dann hier (als Archiv)
 <div id="zahl" style="display: none;">
 [[input:ansZ]][[validation:ansZ]][[feedback:prtZ]]
 </div>
-
