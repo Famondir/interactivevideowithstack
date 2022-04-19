@@ -69,13 +69,8 @@ function stateQuestion(event) {
 			}
 		}
 	} else {
-		// showD(list[anzahlRichtig][0]);
-		// console.log("Curr Time at stateQ: "+player.currentTime());
-		
 		for (let i = list.length-1; i >= 0; i--) {
-			// console.log("loop: "+i+", "+list[i][1]);
 			if (player.currentTime() >= list[i][1]) {
-				// console.log("show: "+list[i][0]);
 				moveQ(list[i][0]);
 				showD(list[i][0]);
 				break;
@@ -150,8 +145,6 @@ function addMarkers() {
 		} else {
 			numDivs = anzahlRichtig;
 		}
-		
-		console.log(numDivs);
 		
 		for (i = 0; i <= numDivs && i < list.length-1; i++) {
 			
