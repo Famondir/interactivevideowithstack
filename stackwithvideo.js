@@ -43,15 +43,45 @@ function toggleV(s) { // schaltet zwischen Sichtbarkeit und Unsichtbarkeit hin u
   }
 }
 
+function moveQ(s) {
+	// schiebt alle Fragen ins Archiv, die nicht dem Zeitintervall entsprechen
+	var qArchive = document.getElementById("aufgabensammlung");	
+	for (let i = 0; i < list.length-1; i++) {
+		var el = document.getElementById(list[i][0]);
+		qArchive.insertAdjacentElement('beforeend', el);
+	}
+	
+	// schiebt die Aufgabe, die dem Zeitintervall entspricht, ins questionCanvas
+	var currentQuestion = document.getElementById(s);
+	currentQuestion.classList.add("overflow-auto"); // lässt scrollen, falls Inhalt zu groß für Anzeigefeld
+	document.getElementById('questionCanvasHeader').insertAdjacentElement('afterend', currentQuestion); // verschiebt die Aufgabe in den Platzhalter
+}
+
 function stateQuestion(event) {
-	if (player.currentTime() >= maxtime) { // wenn das Video am Ende des aktuellen Abschnitts angekommen ist
-		player.pause();
-		// getState();
-		
-		if (anzahlRichtig < list.length-1) { // zeige die nächste Aufgabe, wenn es noch eine gibt
-			showD(list[anzahlRichtig][0]);
-			showV("questionCanvas");
+	if (options[1][1] != "free") {
+		if (player.currentTime() >= maxtime) { // wenn das Video am Ende des aktuellen Abschnitts angekommen ist
+			player.pause();
+			// getState();
+			
+			if (anzahlRichtig < list.length-1) { // zeige die nächste Aufgabe, wenn es noch eine gibt
+				showD(list[anzahlRichtig][0]);
+				showV("questionCanvas");
+			}
 		}
+	} else {
+		// showD(list[anzahlRichtig][0]);
+		// console.log("Curr Time at stateQ: "+player.currentTime());
+		
+		for (let i = list.length-1; i >= 0; i--) {
+			// console.log("loop: "+i+", "+list[i][1]);
+			if (player.currentTime() >= list[i][1]) {
+				// console.log("show: "+list[i][0]);
+				moveQ(list[i][0]);
+				showD(list[i][0]);
+				break;
+			}
+		}
+		
 	}
 }
 
@@ -115,7 +145,15 @@ function addMarkers() {
 
 		// Loop over each cue point, dynamically create a div for each
 		// then place div in progress bar
-		for (i = 0; i <= anzahlRichtig && i < list.length-1; i++) {
+		if (options[1][1] == "free") {
+			numDivs = list.length-1;
+		} else {
+			numDivs = anzahlRichtig;
+		}
+		
+		console.log(numDivs);
+		
+		for (i = 0; i <= numDivs && i < list.length-1; i++) {
 			
 			var elem = document.createElement("div");
 			elem.className = "vjs-marker";
@@ -128,12 +166,17 @@ function addMarkers() {
 			elem.appendChild(elemSpan);
 			
 			elem.onclick = function () {
-				if (this.dataset.time <= maxtime) {
+				if (options[1][1] != "free") {
+					if (this.dataset.time <= maxtime) {
+						player.currentTime(this.dataset.time);
+						console.log("Sprung erfolgreich.");
+						// stateQuestion(); // zeigt neue Aufgabe, wenn der Sprungmarker der neueste ist
+					} else {
+						console.log("Hier darfst du noch nicht hin springen.");
+					}
+				} else {
 					player.currentTime(this.dataset.time);
 					console.log("Sprung erfolgreich.");
-					stateQuestion(); // zeigt neue Aufgabe, wenn der Sprungmarker der neueste ist
-				} else {
-					console.log("Hier darfst du noch nicht hin springen.");
 				}
 			};
 			
@@ -143,8 +186,8 @@ function addMarkers() {
 		// Add blocker
 			var elem = document.createElement("div");
 			elem.className = "vjs-marker vjs-blocker";
-			elem.style.left = list[anzahlRichtig][1]/videoDuration*100 + "%";
-			elem.style.width = (100-list[anzahlRichtig][1]/videoDuration*100) + "%"
+			elem.style.left = list[numDivs][1]/videoDuration*100 + "%";
+			elem.style.width = (100-list[numDivs][1]/videoDuration*100) + "%"
 			
 			var elemSpan = document.createElement("span");
 			elemSpan.textContent = "Hierhin können Sie noch nicht springen.";
@@ -282,18 +325,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		
 		// wenn der Benutzer im Video springen möchte...
-		this.on('seeking', function () {
-			// guard against infinite recursion:
-			// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-			var delta = player.currentTime() - maxtime;
-			if (delta > 0) {
-				player.pause();
-				console.log("Video pausiert, da zu weit gesprungen");
-				//play back from where the user started seeking after rewind or without rewind
-				player.currentTime((timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime)); // soll Endlosschleife vorbeugen
-				player.play();
-			}
-		});
+		if (options[1][1] != "free") {
+			this.on('seeking', function () {
+				// guard against infinite recursion:
+				// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+				var delta = player.currentTime() - maxtime;
+				if (delta > 0) {
+					player.pause();
+					console.log("Video pausiert, da zu weit gesprungen");
+					//play back from where the user started seeking after rewind or without rewind
+					player.currentTime((timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime)); // soll Endlosschleife vorbeugen
+					player.play();
+				}
+			});
+		}
 		
 		// Fügt dem Player einen Button hinzu, mit dem die Aufgabe angezeigt und ausgeblendet werden kann
 		var Button = videojs.getComponent('Button');
@@ -326,9 +371,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	
 	// Neueste Aufgabe verschieben
 	if (anzahlRichtig < list.length-1) { // wenn noch nicht alle Aufgaben gelöst wurden
-		var currentQuestion = document.getElementById(list[anzahlRichtig][0]);
-		currentQuestion.classList.add("overflow-auto"); // lässt scrollen, falls Inhalt zu große für Anzeigefeld
-		document.getElementById('questionCanvasHeader').insertAdjacentElement('afterend', currentQuestion); // verschiebt die Aufgabe in den Platzhalter
+		moveQ(list[anzahlRichtig][0]);
 	}
 	
 	// Alte Aufgaben verschieben
@@ -367,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	
 	// Aufgabensammlung anzeigen, wenn nötig
-	if (anzahlRichtig > 0) {
+	if (anzahlRichtig > 0 && options[1][1] != "free") {
 		document.getElementById("aufgabensammlung").style.display = "block";
 	}
 	
