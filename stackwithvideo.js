@@ -9,7 +9,7 @@
  * @author Simon Schäfer <Simon.Schaefer@HTW-Berlin.de>
  *
  * Created at     : 2022-02-16
- * Last modified  : 2022-03-25
+ * Last modified  : 2022-04-20
  */
 
 // #----------# defining functions #----------#
@@ -58,7 +58,7 @@ function moveQ(s) {
 }
 
 function stateQuestion(event) {
-	if (options[1][1] != "free") {
+	if (Optionen["navigation"] != "free") {
 		if (player.currentTime() >= maxtime) { // wenn das Video am Ende des aktuellen Abschnitts angekommen ist
 			player.pause();
 			// getState();
@@ -140,7 +140,7 @@ function addMarkers() {
 
 		// Loop over each cue point, dynamically create a div for each
 		// then place div in progress bar
-		if (options[1][1] == "free") {
+		if (Optionen["navigation"] == "free") {
 			numDivs = list.length-1;
 		} else {
 			numDivs = anzahlRichtig;
@@ -159,7 +159,7 @@ function addMarkers() {
 			elem.appendChild(elemSpan);
 			
 			elem.onclick = function () {
-				if (options[1][1] != "free") {
+				if (Optionen["navigation"] != "free") {
 					if (this.dataset.time <= maxtime) {
 						player.currentTime(this.dataset.time);
 						console.log("Sprung erfolgreich.");
@@ -211,12 +211,17 @@ var prtList = null;
 var anzahl = 0;
 var anzahlRichtig = 0;
 var aktuelleAufgabe = "";
+const Optionen = [];
 
 // #----------# adding eventlisteners #----------#
 
 // Seitenstruktur ist geladen, Bilder etc. aber noch nicht
 document.addEventListener("DOMContentLoaded", function(event) {
 	console.log('DOM is fully loaded');
+	
+	for (let i = 0; i < options.length; i++) {
+		Optionen[options[i][0]] = options[i][1];
+	}
 	
 	// fügt der in STACK definierten Liste der Aufgaben einen Knoten hinzu, der die maximale Videolaufzeit enthalten wird
 	// dafür müssen aber erst die Metadaten des Videos geladen sein
@@ -318,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		
 		// wenn der Benutzer im Video springen möchte...
-		if (options[1][1] != "free") {
+		if (Optionen["navigation"] != "free") {
 			this.on('seeking', function () {
 				// guard against infinite recursion:
 				// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
@@ -368,7 +373,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	
 	// Alte Aufgaben verschieben
-	if (options[0][1] == "player") {		
+	if (Optionen["archive"] == "player") {		
 		document.getElementById('questionCanvas').insertAdjacentHTML('afterbegin', `
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 			  <li class="nav-item" role="presentation">
@@ -403,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	
 	// Aufgabensammlung anzeigen, wenn nötig
-	if (anzahlRichtig > 0 && options[1][1] != "free") {
+	if (anzahlRichtig > 0 && Optionen["navigation"] != "free") {
 		document.getElementById("aufgabensammlung").style.display = "block";
 	}
 	
