@@ -219,8 +219,14 @@ const Optionen = [];
 document.addEventListener("DOMContentLoaded", function(event) {
 	console.log('DOM is fully loaded');
 	
+	// erstellt ein assoziatives Array
 	for (let i = 0; i < options.length; i++) {
 		Optionen[options[i][0]] = options[i][1];
+	}
+	
+	// versteckt alle Aufgaben zu Beginn
+	for (let i = 0; i < list.length; i++) {
+		document.getElementById(list[i][0]).style.display = "none";
 	}
 	
 	// fügt der in STACK definierten Liste der Aufgaben einen Knoten hinzu, der die maximale Videolaufzeit enthalten wird
