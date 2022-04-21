@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<!-- question: 7772692  -->
+  <question type="stack">
+    <name>
+      <text>Interactive video with STACK (load own js script) (English, linear)</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[/* load 3rd party scripts */
+<script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js"></script>
+<script src="https://videowithstack.4lima.de/stackwithvideo.js"></script>
+
+/* link lists from STACK question variables field and in JS */
+<script type="text/javascript">
+	list = {#questionList#};
+	options = {#options#}
+</script>
+
+/* embed a video by direct source link */
+<div id="interactiveVideo" class="mt-2 mb-2">
+    <video-js id="video1" class="video-js vjs-default-skin" controls="" data-setup="{&quot;playbackRates&quot;: [0.75, 0.9, 1, 1.1, 1.25, 1.5], &quot;fluid&quot;: true}">
+    <source src="https://mediathek.htw-berlin.de/getMedium/Default/0ecfae7c384bca4efc7008a9b3c9005e.mp4" type="video/mp4">
+	</video-js>
+</div>
+
+/* embed a video by youtube link */
+/*
+<div id="interactiveVideo" class="mt-2 mb-2">
+	<video-js id="video1" class="video-js vjs-default-skin" controls="" data-setup="{&quot;playbackRates&quot;: [0.75, 0.9, 1, 1.1, 1.25, 1.5], &quot;fluid&quot;: true, &quot;techOrder&quot;: [&quot;youtube&quot;], 
+	&quot;sources&quot;: [{ &quot;type&quot;: &quot;video/youtube&quot;, &quot;src&quot;: &quot;https://www.youtube.com/watch?v=xjS6SftYQaQ&quot;}] }">
+<track kind="chapters" src="@@PLUGINFILE@@/dummyvideo.vtt" srclang="en"  label="English" default>
+	</video-js>
+</div>
+*/
+
+/* 
+division container that will hold the current question
+will be moved onto video element with JS
+ */
+<div id="questionCanvas" class="card" style="visibility: hidden;">
+	<h4 class="card-header" id="questionCanvasHeader">Recent Question
+		<button type="button" class="close ml-4" onclick="toggleV('questionCanvas'); return false;" id="closeButton"> /* don't reload the page */
+          <span aria-hidden="true">&times;</span>
+        </button>
+	</h4>
+	<div class="card-footer" id="questionCanvasFooter">
+		/* here the submit button will be placed */
+	</div>
+</div>
+
+/*
+Question collection (German: Aufgabensammlung)
+here each question will be fomulated in an own div container
+will be used as question archive in linear navigation mode
+*/
+<div id="aufgabensammlung" class="card bg-light" style="display: none;"> /* uses classes defined in Bootstrap which is not mandatory for functionality */
+	<h4 class="card-header" id="aufgabensammlungHeader">Correct solved Questions</h4>
+    <div class="card-body" id="a1"> /* id has to match with entry in questionList */
+        <h5 class="card-title">Question 1</h5>
+        <p class="card-text">Calculate \({@v1@}+{@v2@}\).</p>
+        <p class="card-text">[[input:ans1]] [[validation:ans1]]</p>
+		<p class="card-text">[[feedback:prt1]]</p>
+    </div>
+	<div class="card-body" id="a2">
+        <h5 class="card-title">Question 2</h5>
+        <p class="card-text">Calculate \({@v1@}-{@v2@}\).</p>
+        <p class="card-text">[[input:ans2]] [[validation:ans2]]</p>
+		<p class="card-text">[[feedback:prt2]]</p>
+    </div>
+	<div class="card-body" id="a3">
+        <h5 class="card-title">Question 3</h5>
+        <p class="card-text">Calculate \({@v1@}*{@v2@}\).</p>
+        <p class="card-text">[[input:ans3]] [[validation:ans3]]</p>
+		<p class="card-text">[[feedback:prt3]]</p>
+    </div>
+</div>
+
+/* will save the current video position */
+<div id="zahl" style="display: none;">
+[[input:ansZ]][[validation:ansZ]][[feedback:prtZ]]
+</div>]]></text>
+<file name="dummyvideo (1).vtt" path="/" encoding="base64">V0VCVlRUDQoNCkNIQVBURVIgMQ0KMDA6MDA6MTAuMDAwIC0tPiAwMDowMDozMC4wMDANCkludHJvDQogDQoNCkNIQVBURVIgMg0KMDA6MDA6MzAuMDAwIC0tPiAwMDowMDo1Ny4wMDANClBob3RvLCBQaG9uZWJvb2ssIFBoZWFzYW50DQogDQoNCkNIQVBURVIgMw0KMDA6MDA6NTcuMDAwIC0tPiAwMDowMTowNS4wMDANCkRydW0gU29sbw0KIA0KDQpDSEFQVEVSIDQNCjAwOjAxOjA1LjAwMCAtLT4gMDA6MDE6MTYuMDAwDQpTb3VuZHMgbGlrZSBhbiBG</file>
+<file name="dummyvideo.vtt" path="/" encoding="base64">V0VCVlRUDQoNCkNIQVBURVIgMQ0KMDA6MDA6MTAuMDAwIC0tPiAwMDowMDozMC4wMDANCkludHJvDQogDQoNCkNIQVBURVIgMg0KMDA6MDA6MzAuMDAwIC0tPiAwMDowMDo1Ny4wMDANClBob3RvLCBQaG9uZWJvb2ssIFBoZWFzYW50DQogDQoNCkNIQVBURVIgMw0KMDA6MDA6NTcuMDAwIC0tPiAwMDowMTowNS4wMDANCkRydW0gU29sbw0KIA0KDQpDSEFQVEVSIDQNCjAwOjAxOjA1LjAwMCAtLT4gMDA6MDE6MTYuMDAwDQpTb3VuZHMgbGlrZSBhbiBG</file>
+    </questiontext>
+    <generalfeedback format="html">
+      <text></text>
+    </generalfeedback>
+    <defaultgrade>1</defaultgrade>
+    <penalty>0.1</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+    <stackversion>
+      <text>2021120900</text>
+    </stackversion>
+    <questionvariables>
+      <text><![CDATA[questionList: [["a1",5,"Test"],["a2",10,"Langer text hier"],["a3",20,"unnötig"]];
+options: [["navigation", "linear"], ["archive", "below"]];
+
+v1: 2;
+v2: 7;
+tans1: v1+v2;
+tans2: v1-v2;
+tans3: v1*v2;]]></text>
+    </questionvariables>
+    <specificfeedback format="html">
+      <text></text>
+    </specificfeedback>
+    <questionnote>
+      <text></text>
+    </questionnote>
+    <questionsimplify>1</questionsimplify>
+    <assumepositive>0</assumepositive>
+    <assumereal>0</assumereal>
+    <prtcorrect format="html">
+      <text>Richtige Antwort, gut gemacht!</text>
+    </prtcorrect>
+    <prtpartiallycorrect format="html">
+      <text>Ihre Antwort ist teilweise korrekt.</text>
+    </prtpartiallycorrect>
+    <prtincorrect format="html">
+      <text>Falsche Antwort.</text>
+    </prtincorrect>
+    <multiplicationsign>dot</multiplicationsign>
+    <sqrtsign>1</sqrtsign>
+    <complexno>i</complexno>
+    <inversetrig>cos-1</inversetrig>
+    <logicsymbol>lang</logicsymbol>
+    <matrixparens>[</matrixparens>
+    <variantsselectionseed></variantsselectionseed>
+    <input>
+      <name>ans1</name>
+      <type>numerical</type>
+      <tans>tans1</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>1</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>0</mustverify>
+      <showvalidation>3</showvalidation>
+      <options></options>
+    </input>
+    <input>
+      <name>ans2</name>
+      <type>numerical</type>
+      <tans>tans2</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>1</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>0</mustverify>
+      <showvalidation>3</showvalidation>
+      <options></options>
+    </input>
+    <input>
+      <name>ans3</name>
+      <type>numerical</type>
+      <tans>tans3</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>1</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>0</mustverify>
+      <showvalidation>3</showvalidation>
+      <options></options>
+    </input>
+    <input>
+      <name>ansZ</name>
+      <type>numerical</type>
+      <tans>0</tans>
+      <boxsize>15</boxsize>
+      <strictsyntax>1</strictsyntax>
+      <insertstars>0</insertstars>
+      <syntaxhint></syntaxhint>
+      <syntaxattribute>0</syntaxattribute>
+      <forbidwords></forbidwords>
+      <allowwords></allowwords>
+      <forbidfloat>0</forbidfloat>
+      <requirelowestterms>0</requirelowestterms>
+      <checkanswertype>0</checkanswertype>
+      <mustverify>0</mustverify>
+      <showvalidation>0</showvalidation>
+      <options></options>
+    </input>
+    <prt>
+      <name>prt1</name>
+      <value>1.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>1</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>AlgEquiv</answertest>
+        <sans>ans1</sans>
+        <tans>tans1</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prt1-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prt1-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+    <prt>
+      <name>prt2</name>
+      <value>1.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>1</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>AlgEquiv</answertest>
+        <sans>ans2</sans>
+        <tans>tans2</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prt2-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prt2-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+    <prt>
+      <name>prt3</name>
+      <value>1.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>1</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>AlgEquiv</answertest>
+        <sans>ans3</sans>
+        <tans>tans3</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prt3-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prt3-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+    <prt>
+      <name>prtZ</name>
+      <value>0.0000000</value>
+      <autosimplify>1</autosimplify>
+      <feedbackstyle>0</feedbackstyle>
+      <feedbackvariables>
+        <text></text>
+      </feedbackvariables>
+      <node>
+        <name>0</name>
+        <answertest>GTE</answertest>
+        <sans>ansZ</sans>
+        <tans>0</tans>
+        <testoptions></testoptions>
+        <quiet>0</quiet>
+        <truescoremode>=</truescoremode>
+        <truescore>1.0000000</truescore>
+        <truepenalty></truepenalty>
+        <truenextnode>-1</truenextnode>
+        <trueanswernote>prtZ-1-T</trueanswernote>
+        <truefeedback format="html">
+          <text><![CDATA[<span id="zaehler">{#ansZ#}</span>]]></text>
+        </truefeedback>
+        <falsescoremode>=</falsescoremode>
+        <falsescore>0.0000000</falsescore>
+        <falsepenalty></falsepenalty>
+        <falsenextnode>-1</falsenextnode>
+        <falseanswernote>prtZ-1-F</falseanswernote>
+        <falsefeedback format="html">
+          <text></text>
+        </falsefeedback>
+      </node>
+    </prt>
+  </question>
+
+</quiz>

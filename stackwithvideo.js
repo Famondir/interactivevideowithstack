@@ -183,7 +183,7 @@ function addMarkers() {
 			elem.style.width = (100-list[numDivs][1]/videoDuration*100) + "%"
 			
 			var elemSpan = document.createElement("span");
-			elemSpan.textContent = "Hierhin können Sie noch nicht springen.";
+			elemSpan.textContent = "You can't jump here now. Answer the current question first.";
 			elem.appendChild(elemSpan);
 			
 			progressHolder.appendChild(elem);

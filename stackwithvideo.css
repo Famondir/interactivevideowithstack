@@ -7,7 +7,7 @@
  * @author Simon Schäfer <Simon.Schaefer@HTW-Berlin.de>
  *
  * Created at     : 2022-02-24
- * Last modified  : 2023-02-25
+ * Last modified  : 2023-04-21
  */
  
 .vjs-marker {
@@ -16,7 +16,7 @@
 	width: 5px;
 	height: 110%;
 	z-index: 30;
-	margin-left: -3px;
+	/* margin-left: -3px; */
 }
 
 .vjs-marker:hover span {
