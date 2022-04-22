@@ -16,7 +16,7 @@
 	width: 5px;
 	height: 110%;
 	z-index: 30;
-	/* margin-left: -3px; */
+	margin-left: -3px; /* otherwise chapter marker jumps fail, because there is also an seek event fired after maxtime position */
 }
 
 .vjs-marker:hover span {

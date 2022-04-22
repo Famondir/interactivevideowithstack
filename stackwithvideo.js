@@ -43,18 +43,25 @@ function toggleV(s) { // schaltet zwischen Sichtbarkeit und Unsichtbarkeit hin u
   }
 }
 
-function moveQ(s) {
+function emptyQuestionCanvas() {
 	// schiebt alle Fragen ins Archiv, die nicht dem Zeitintervall entsprechen
 	var qArchive = document.getElementById("aufgabensammlung");	
 	for (let i = 0; i < list.length-1; i++) {
 		var el = document.getElementById(list[i][0]);
 		qArchive.insertAdjacentElement('beforeend', el);
 	}
-	
-	// schiebt die Aufgabe, die dem Zeitintervall entspricht, ins questionCanvas
-	var currentQuestion = document.getElementById(s);
-	currentQuestion.classList.add("overflow-auto"); // lässt scrollen, falls Inhalt zu groß für Anzeigefeld
-	document.getElementById('questionCanvasHeader').insertAdjacentElement('afterend', currentQuestion); // verschiebt die Aufgabe in den Platzhalter
+}
+
+function moveQ(s) {
+	if (s != gezeigteAufgabe) {
+		emptyQuestionCanvas();
+		
+		// schiebt die Aufgabe, die dem Zeitintervall entspricht, ins questionCanvas
+		var currentQuestion = document.getElementById(s);
+		currentQuestion.classList.add("overflow-auto"); // lässt scrollen, falls Inhalt zu groß für Anzeigefeld
+		document.getElementById('questionCanvasHeader').insertAdjacentElement('afterend', currentQuestion); // verschiebt die Aufgabe in den Platzhalter
+		gezeigteAufgabe = s;
+	}
 }
 
 function stateQuestion(event) {
@@ -69,14 +76,19 @@ function stateQuestion(event) {
 			}
 		}
 	} else {
-		for (let i = list.length-1; i >= 0; i--) {
-			if (player.currentTime() >= list[i][1]) {
-				moveQ(list[i][0]);
-				showD(list[i][0]);
-				break;
+		console.log("wählt aufgabe")
+		if (player.currentTime() < list[0][1]) {
+			emptyQuestionCanvas();
+			gezeigteAufgabe = "";
+		} else {
+			for (let i = list.length-1; i >= 0; i--) {
+				if (player.currentTime() >= list[i][1]) {
+					moveQ(list[i][0]);
+					showD(list[i][0]);
+					break;
+				}
 			}
-		}
-		
+		}			
 	}
 }
 
@@ -159,18 +171,10 @@ function addMarkers() {
 			elem.appendChild(elemSpan);
 			
 			elem.onclick = function () {
-				if (Optionen["navigation"] != "free") {
-					if (this.dataset.time <= maxtime) {
-						player.currentTime(this.dataset.time);
-						console.log("Sprung erfolgreich.");
-						// stateQuestion(); // zeigt neue Aufgabe, wenn der Sprungmarker der neueste ist
-					} else {
-						console.log("Hier darfst du noch nicht hin springen.");
-					}
-				} else {
-					player.currentTime(this.dataset.time);
-					console.log("Sprung erfolgreich.");
-				}
+				player.currentTime(this.dataset.time);
+				console.log("Sprung erfolgreich.");
+				stateQuestion();
+				showV("questionCanvas");
 			};
 			
 			progressHolder.appendChild(elem);
@@ -212,6 +216,7 @@ var anzahl = 0;
 var anzahlRichtig = 0;
 var aktuelleAufgabe = "";
 const Optionen = [];
+var gezeigteAufgabe = "";
 
 // #----------# adding eventlisteners #----------#
 
@@ -329,20 +334,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		
 		// wenn der Benutzer im Video springen möchte...
-		if (Optionen["navigation"] != "free") {
-			this.on('seeking', function () {
+		this.on('seeking', function () {
+			
+			if (Optionen["navigation"] != "free") {
 				// guard against infinite recursion:
 				// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
 				var delta = player.currentTime() - maxtime;
+				// console.log("Delta = "+delta+"; cT: "+player.currentTime()+"; mT: "+maxtime);
+				
 				if (delta > 0) {
 					player.pause();
 					console.log("Video pausiert, da zu weit gesprungen");
 					//play back from where the user started seeking after rewind or without rewind
 					player.currentTime((timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime)); // soll Endlosschleife vorbeugen
 					player.play();
+					// console.log("cT: "+player.currentTime());
 				}
-			});
-		}
+			}
+			
+			console.log("State on seek "+gezeigteAufgabe);
+			stateQuestion();
+			console.log("State on seek "+gezeigteAufgabe);
+		});
 		
 		// Fügt dem Player einen Button hinzu, mit dem die Aufgabe angezeigt und ausgeblendet werden kann
 		var Button = videojs.getComponent('Button');
