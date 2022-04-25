@@ -28,19 +28,54 @@ function loadCSS(cssId, cssUrl) { // lädt eine CSS Datei anhand ihrer URL
 
 function showD(s) { // schaltet ein Element sichtbar via display-Wert
 	document.getElementById(s).style.display = 'block';
+	if (document.getElementById("questionCanvas").style.visibility == "visible") {
+		logViewed();
+	}
 }
 
 function showV(s) { // schaltet ein Element sichtbar via visible-Wert
 	document.getElementById(s).style.visibility = 'visible';
+	logViewed();
 }
 
 function toggleV(s) { // schaltet zwischen Sichtbarkeit und Unsichtbarkeit hin und her (bezogen auf visibility-Wert)
   var x = document.getElementById(s);
   if (x.style.visibility === "hidden") {
 	x.style.visibility = "visible";
+	logViewed();
   } else {
 	x.style.visibility = "hidden";
   }
+}
+
+function logViewed() {
+	viewedQuestions[gezeigteAufgabe] = true;
+	let str = "";
+	for (let i = 0; i < list.length; i++) {
+		str = str+list[i][0]+": "+viewedQuestions[list[i][0]]+"\n";
+	}
+	console.log(str);
+}
+
+function pauseAndSaveState() {
+	if (!player.paused()) {
+		console.log("Video is playing");
+		wasPlaying = true;
+	} else {
+		console.log("Video is paused");
+		wasPlaying = false;
+	}
+	
+	player.pause();
+}
+
+function resumePlaying() {
+	if (wasPlaying) {
+		console.log("Video is playing again");
+		player.play();
+	} else {
+		console.log("Video is still paused");
+	}
 }
 
 function emptyQuestionCanvas() {
@@ -82,7 +117,7 @@ function stateQuestion(event) {
 		} else {
 			for (let i = list.length-1; i >= 0; i--) {
 				if (player.currentTime() >= list[i][1]) {
-					console.log("Wählt Aufgabe "+list[i][0]+"; currTime: "+player.currentTime());
+					// console.log("Wählt Aufgabe "+list[i][0]+"; currTime: "+player.currentTime());
 					moveQ(list[i][0]);
 					showD(list[i][0]);
 					break;
@@ -217,6 +252,8 @@ var anzahlRichtig = 0;
 var aktuelleAufgabe = "";
 const Optionen = [];
 var gezeigteAufgabe = "";
+var wasPlaying = false;
+const viewedQuestions = [];
 
 // #----------# adding eventlisteners #----------#
 
@@ -237,6 +274,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	// fügt der in STACK definierten Liste der Aufgaben einen Knoten hinzu, der die maximale Videolaufzeit enthalten wird
 	// dafür müssen aber erst die Metadaten des Videos geladen sein
 	list.push(["none", NaN]);
+	
+	for (let i = 0; i < list.length; i++) { // ersetzen, wenn diese Variable in STACK-Feedback übergeben wird
+		viewedQuestions[list[i][0]] = false; //assoziatives Array
+	}
 	
 	// setzt die Referenz zum vjs player
 	player = videojs("video1");
@@ -288,7 +329,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			
 			// schreibt die Videogesamtlänge in die erweiterte Liste
 			list[list.length-1] = (["none",player.duration()]);
-			maxtime = list[anzahlRichtig][1];
+			if (Optionen["navigation"] == "free") {
+				maxtime = list[list.length-1][1]
+			}
 			
 			// setzt Videozeit auf letzten Videostand
 			if (document.querySelector('#zaehler')) {
@@ -333,28 +376,51 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			}
 		});
 		
-		// wenn der Benutzer im Video springen möchte...
-		this.on('seeking', function () {
-			
+		this.on('seeked', function () {
+			/*
 			if (Optionen["navigation"] != "free") {
-				// guard against infinite recursion:
+			// guard against infinite recursion:
 				// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
 				var delta = player.currentTime() - maxtime;
 				// console.log("Delta = "+delta+"; cT: "+player.currentTime()+"; mT: "+maxtime);
 				
 				if (delta > 0) {
-					player.pause();
+					pauseAndSaveState();
 					console.log("Video pausiert, da zu weit gesprungen");
 					//play back from where the user started seeking after rewind or without rewind
 					player.currentTime((timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime)); // soll Endlosschleife vorbeugen
-					player.play();
+					resumePlaying();
+					// console.log("cT: "+player.currentTime());
+				}
+			}
+			*/
+			
+			stateQuestion();
+			// console.log("Seeked. Time is: "+player.currentTime());
+		});
+		
+		// wenn der Benutzer im Video springen möchte...
+		this.on('seeking', function () {
+			
+			if (Optionen["navigation"] != "free") {
+			// guard against infinite recursion:
+				// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+				var delta = player.currentTime() - maxtime;
+				// console.log("Delta = "+delta+"; cT: "+player.currentTime()+"; mT: "+maxtime);
+				
+				if (delta > 0) {
+					pauseAndSaveState();
+					console.log("Video pausiert, da zu weit gesprungen");
+					//play back from where the user started seeking after rewind or without rewind
+					player.currentTime((timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime)); // soll Endlosschleife vorbeugen
+					resumePlaying();
 					// console.log("cT: "+player.currentTime());
 				}
 			}
 			
-			/*
-			console.log("State on seek "+gezeigteAufgabe+player.currentTime());
-			// stateQuestion();
+			
+			// console.log("State on seek "+gezeigteAufgabe+"; cT: "+player.currentTime());
+			/* stateQuestion();
 			console.log("State on seek "+gezeigteAufgabe);
 			*/
 		});
