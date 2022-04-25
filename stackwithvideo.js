@@ -9,7 +9,7 @@
  * @author Simon Schäfer <Simon.Schaefer@HTW-Berlin.de>
  *
  * Created at     : 2022-02-16
- * Last modified  : 2022-04-20
+ * Last modified  : 2022-04-25
  */
 
 // #----------# defining functions #----------#
@@ -50,11 +50,13 @@ function toggleV(s) { // schaltet zwischen Sichtbarkeit und Unsichtbarkeit hin u
 
 function logViewed() {
 	viewedQuestions[gezeigteAufgabe] = true;
+	/*
 	let str = "";
 	for (let i = 0; i < list.length; i++) {
 		str = str+list[i][0]+": "+viewedQuestions[list[i][0]]+"\n";
 	}
 	console.log(str);
+	*/
 }
 
 function pauseAndSaveState() {
@@ -120,10 +122,21 @@ function stateQuestion(event) {
 					// console.log("Wählt Aufgabe "+list[i][0]+"; currTime: "+player.currentTime());
 					moveQ(list[i][0]);
 					showD(list[i][0]);
+					noteUnseenQ(list[i][0]);
 					break;
 				}
 			}
 		}			
+	}
+}
+
+function noteUnseenQ(s) {
+	if (!viewedQuestions[s]) {
+		document.getElementsByClassName("svg-icon")[0].classList.add("unseenQ");
+		// console.log("color blue");
+	} else {
+		document.getElementsByClassName("svg-icon")[0].classList.remove("unseenQ");
+		// console.log("color white again");
 	}
 }
 
@@ -377,24 +390,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 		
 		this.on('seeked', function () {
-			/*
-			if (Optionen["navigation"] != "free") {
-			// guard against infinite recursion:
-				// user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
-				var delta = player.currentTime() - maxtime;
-				// console.log("Delta = "+delta+"; cT: "+player.currentTime()+"; mT: "+maxtime);
-				
-				if (delta > 0) {
-					pauseAndSaveState();
-					console.log("Video pausiert, da zu weit gesprungen");
-					//play back from where the user started seeking after rewind or without rewind
-					player.currentTime((timeTracking[lastUpdated] < maxtime ? timeTracking[lastUpdated] : maxtime)); // soll Endlosschleife vorbeugen
-					resumePlaying();
-					// console.log("cT: "+player.currentTime());
-				}
-			}
-			*/
-			
 			stateQuestion();
 			// console.log("Seeked. Time is: "+player.currentTime());
 		});

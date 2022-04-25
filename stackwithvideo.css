@@ -7,7 +7,7 @@
  * @author Simon Schäfer <Simon.Schaefer@HTW-Berlin.de>
  *
  * Created at     : 2022-02-24
- * Last modified  : 2023-04-21
+ * Last modified  : 2023-04-25
  */
  
 .vjs-marker {
@@ -70,7 +70,11 @@
 .svg-icon svg {
 	height:1.8em; 
 	width:1.8em;
-} 
+}
+
+.svg-icon.unseenQ {
+	fill: #0F6FC5;
+}	
 
 /* Positionate the SVG correctly */ 
 .svg-icon.svg-baseline svg {
