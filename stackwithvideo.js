@@ -26,6 +26,27 @@ function loadCSS(cssId, cssUrl) { // lädt eine CSS Datei anhand ihrer URL
 	}
 }
 
+function addCSS(str) {
+    var styleElement = document.createElement('style');
+    styleElement.appendChild(document.createTextNode(str));
+
+    var head = document.getElementsByTagName('head')[0];
+
+    head.appendChild(styleElement);
+}
+
+function dontFadeOutControlBar() {
+	if (Optionen["stickControlBar"]) {
+		let str = `
+			.vjs-default-skin.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+				visibility: visible;
+				opacity: 1;
+			}`;
+		
+		addCSS(str);
+	}
+}
+
 function showD(s) { // schaltet ein Element sichtbar via display-Wert
 	document.getElementById(s).style.display = 'block';
 	if (document.getElementById("questionCanvas").style.visibility == "visible") {
@@ -43,6 +64,7 @@ function toggleV(s) { // schaltet zwischen Sichtbarkeit und Unsichtbarkeit hin u
   if (x.style.visibility === "hidden") {
 	x.style.visibility = "visible";
 	logViewed();
+	noteUnseenQ(aktuelleAufgabe);
   } else {
 	x.style.visibility = "hidden";
   }
@@ -61,10 +83,10 @@ function logViewed() {
 
 function pauseAndSaveState() {
 	if (!player.paused()) {
-		console.log("Video is playing");
+		// console.log("Video was playing");
 		wasPlaying = true;
 	} else {
-		console.log("Video is paused");
+		// console.log("Video was paused");
 		wasPlaying = false;
 	}
 	
@@ -120,9 +142,11 @@ function stateQuestion(event) {
 			for (let i = list.length-1; i >= 0; i--) {
 				if (player.currentTime() >= list[i][1]) {
 					// console.log("Wählt Aufgabe "+list[i][0]+"; currTime: "+player.currentTime());
-					moveQ(list[i][0]);
-					showD(list[i][0]);
-					noteUnseenQ(list[i][0]);
+					aktuelleAufgabe = list[i][0];
+					moveQ(aktuelleAufgabe);
+					showD(aktuelleAufgabe);
+					popupQ(aktuelleAufgabe);
+					noteUnseenQ(aktuelleAufgabe);
 					break;
 				}
 			}
@@ -130,12 +154,26 @@ function stateQuestion(event) {
 	}
 }
 
+function popupQ(s) {
+	if (!viewedQuestions[s]) {
+		if (Optionen["popup"]) {
+			showV("questionCanvas");
+		}
+		if (Optionen["stopOnPopup"]) {
+			// console.log("stop to popup");
+			pauseAndSaveState();
+		};
+	}
+}
+
 function noteUnseenQ(s) {
 	if (!viewedQuestions[s]) {
 		document.getElementsByClassName("svg-icon")[0].classList.add("unseenQ");
+		if (Optionen["showUSQIcon"]) document.getElementsByClassName("usq-icon")[0].classList.add("visible");
 		// console.log("color blue");
 	} else {
 		document.getElementsByClassName("svg-icon")[0].classList.remove("unseenQ");
+		if (Optionen["showUSQIcon"]) document.getElementsByClassName("usq-icon")[0].classList.remove("visible");
 		// console.log("color white again");
 	}
 }
@@ -497,6 +535,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	const playerCanvas = document.querySelector(".video-js")
 	const questionCanvas = document.querySelector("#questionCanvas");
 	playerCanvas.appendChild(questionCanvas);
+	
+	playerCanvas.insertAdjacentHTML('beforeend', `
+			<div class="usq-icon" id="noteUnseenQIcon">
+			</div>
+		`);
+		
+		var svgCM = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		svgCM.setAttributeNS(null, 'viewBox', '0 0 1792 1792');
+		document.querySelector('#noteUnseenQIcon').appendChild(svgCM);
+		var pathCM = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		pathCM.setAttributeNS(null, 'd', 'M1472 930v318q0 119-84.5 203.5t-203.5 84.5h-832q-119 0-203.5-84.5t-84.5-203.5v-832q0-119 84.5-203.5t203.5-84.5h832q63 0 117 25 15 7 18 23 3 17-9 29l-49 49q-10 10-23 10-3 0-9-2-23-6-45-6h-832q-66 0-113 47t-47 113v832q0 66 47 113t113 47h832q66 0 113-47t47-113v-254q0-13 9-22l64-64q10-10 23-10 6 0 12 3 20 8 20 29zm231-489l-814 814q-24 24-57 24t-57-24l-430-430q-24-24-24-57t24-57l110-110q24-24 57-24t57 24l263 263 647-647q24-24 57-24t57 24l110 110q24 24 24 57t-24 57z');
+		document.querySelector('#noteUnseenQIcon').children[0].appendChild(pathCM);
+	
+	// kicking options in
+	dontFadeOutControlBar();
+	document.getElementsByClassName("usq-icon")[0].classList.add(Optionen["positionUSQIcon"]);
 	
 	if (anzahlRichtig < anzahl) {
 		showV("questionCanvas");
