@@ -76,13 +76,13 @@ function stateQuestion(event) {
 			}
 		}
 	} else {
-		console.log("wählt aufgabe")
 		if (player.currentTime() < list[0][1]) {
 			emptyQuestionCanvas();
 			gezeigteAufgabe = "";
 		} else {
 			for (let i = list.length-1; i >= 0; i--) {
 				if (player.currentTime() >= list[i][1]) {
+					console.log("Wählt Aufgabe "+list[i][0]+"; currTime: "+player.currentTime());
 					moveQ(list[i][0]);
 					showD(list[i][0]);
 					break;
@@ -352,9 +352,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				}
 			}
 			
+			/*
+			console.log("State on seek "+gezeigteAufgabe+player.currentTime());
+			// stateQuestion();
 			console.log("State on seek "+gezeigteAufgabe);
-			stateQuestion();
-			console.log("State on seek "+gezeigteAufgabe);
+			*/
 		});
 		
 		// Fügt dem Player einen Button hinzu, mit dem die Aufgabe angezeigt und ausgeblendet werden kann
