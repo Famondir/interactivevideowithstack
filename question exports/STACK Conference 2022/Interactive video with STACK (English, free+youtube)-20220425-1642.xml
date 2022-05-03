@@ -9,9 +9,7 @@
       <text><![CDATA[/* load 3rd party scripts */
 <script src="https://vjs.zencdn.net/7.18.0/video.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-youtube@2.6.1/dist/Youtube.min.js"></script>
-/* <script src="https://videowithstack.4lima.de/stackwithvideo.js"></script> */
-/* Bestimmte Version abrufbar unter: */
-<script src="https://cdn.jsdelivr.net/gh/Famondir/interactivevideowithstack@0.3.0/stackwithvideo.js"></script> 
+<script src="https://videowithstack.4lima.de/stackwithvideo.js"></script>
 
 /* link lists from STACK question variables field and in JS */
 <script type="text/javascript">
